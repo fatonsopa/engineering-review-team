@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "name": "engineering-review",
+  "documentation": {
+    "title": "Engineering review",
+    "summary": "A portable independent review workflow with one shared Technical Standard (STD), a reusable reviewer role and source-bound report checks. AI judges defects; Python checks evidence consistency.",
+    "prerequisites": [
+      "Python 3 standard library and a tool-enabled host that can read the selected source and write artifacts outside it.",
+      "A lead-supplied candidate scope and reviewer distinct from the implementer. Host permissions and model availability are configured separately."
+    ],
+    "setup": [],
+    "quick_start": {
+      "prompt": "Review module.py against its stated behavior. Keep the target unchanged and return a source-bound report.",
+      "expected_result": "A structured report, capture/inspection artifacts and a mechanical validation receipt, with actual evidence limits."
+    },
+    "scenarios": [
+      {
+        "title": "Review a bounded change",
+        "prompt": "Review parser.py and its selected caller against the supplied requirements before integration.",
+        "expected_result": "Supported actionable findings or a no-findings result with inspected scope and unrun checks."
+      },
+      {
+        "title": "Review changed sources",
+        "prompt": "Follow up after the selected source changed. Preserve the previous report and review the current bytes.",
+        "expected_result": "A fresh capture and affected review; the old source-bound report is not reused as current approval."
+      }
+    ],
+    "verification": {
+      "command": {
+        "argv": [
+          "python3",
+          "scripts/check_review_cases.py",
+          "all"
+        ]
+      },
+      "expected_result": "Thirteen authored mechanical controls pass; this does not establish AI review quality or host behavior."
+    },
+    "troubleshooting": [
+      {
+        "problem": "The report is refused after a source change.",
+        "solution": "Preserve the old artifacts, capture current selected bytes and review the affected change before validating again."
+      },
+      {
+        "problem": "The host cannot expose its exact model identity.",
+        "solution": "Record the requested profile and keep observed_model null; do not infer provider identity or switch accounts."
+      }
+    ],
+    "support": "Give the maintaining lead the exact package/source hashes, failed control or refusal and redacted evidence. Do not include credentials.",
+    "repository": {
+      "text": "The repository itself is the installable skill. The agent asset describes a role; host activation and enforcement require separate configuration.",
+      "links": [
+        {
+          "label": "Engineering review Technical Standard (STD)",
+          "path": "references/review_standard.md"
+        },
+        {
+          "label": "Reviewer agent asset",
+          "path": "assets/agents/engineering-reviewer.md"
+        }
+      ]
+    },
+    "license": "MIT, Manaferra Inc.",
+    "testing": {
+      "prepare": "Use disposable independent source fixtures and keep evidence outside them. Real behavioral runs need a fresh performing context and captured tool trace.",
+      "run_command": {
+        "argv": [
+          "python3",
+          "scripts/evaluate.py",
+          "--package",
+          ".",
+          "--allow-exec"
+        ]
+      },
+      "acceptance_criteria": [
+        "Mechanical contract controls pass on exact package bytes.",
+        "Required actual behavioral cases receive independent source-bound assessment; unrun hosts remain unverified."
+      ],
+      "improvement_steps": [
+        "Locate a concrete failure, preserve its evidence and change only the responsible code or instruction.",
+        "Repeat affected controls and the same frozen behavioral task within the configured bounds."
+      ]
+    }
+  }
+}

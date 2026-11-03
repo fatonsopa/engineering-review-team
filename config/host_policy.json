@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "designed_hosts": [
+    "chatgpt",
+    "claude",
+    "codex",
+    "claude-code"
+  ],
+  "default_ai_route": "current_host_model",
+  "external_cli_required": false,
+  "execution_requirements": [
+    "Python 3",
+    "file access",
+    "declared dependencies"
+  ],
+  "tested_host_activation": [],
+  "budget_policy": "Routine testing includes bounded retries without repeated approval; preserve criteria and attempts, honor explicit hard limits, and stop on stalled progress or retry ceilings.",
+  "maintenance": {
+    "max_experiments": 3,
+    "max_stagnant_experiments": 2,
+    "max_seconds": 3600,
+    "target_success_percent": 100,
+    "allowed_candidate_paths": [
+      "references/review_standard.md",
+      "assets/agents/engineering-reviewer.md",
+      "scripts/review_contract.py",
+      "scripts/check_review_cases.py",
+      "README.md",
+      "SKILL.md",
+      "config/documentation.json",
+      "AGENTS.md"
+    ],
+    "hard_limits": {}
+  }
+}

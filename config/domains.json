@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "domains": [
+    {
+      "name": "review-guidance",
+      "purpose": "Authoritative technical review rules and specialized role.",
+      "owned_paths": [
+        "references/",
+        "assets/"
+      ],
+      "depends_on": []
+    },
+    {
+      "name": "review-evidence",
+      "purpose": "Source snapshot and structured report checks without target execution.",
+      "owned_paths": [
+        "scripts/review_contract.py"
+      ],
+      "depends_on": []
+    },
+    {
+      "name": "review-controls",
+      "purpose": "Positive and negative contract controls, separate from model observations.",
+      "owned_paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "depends_on": [
+        "review-evidence"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,477 @@
+{
+  "schema_version": 1,
+  "tests": {
+    "valid_review": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "valid_review"
+      ]
+    },
+    "missing_capture": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "missing_capture"
+      ]
+    },
+    "missing_inspect": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "missing_inspect"
+      ]
+    },
+    "missing_report": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "missing_report"
+      ]
+    },
+    "order_capture_inspect": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "order_capture_inspect"
+      ]
+    },
+    "order_inspect_report": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "order_inspect_report"
+      ]
+    },
+    "boundary_read_only": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "boundary_read_only"
+      ]
+    },
+    "boundary_source_authority": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "boundary_source_authority"
+      ]
+    },
+    "boundary_evidence": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "boundary_evidence"
+      ]
+    },
+    "branch_findings": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "branch_findings"
+      ]
+    },
+    "branch_clear": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "branch_clear"
+      ]
+    },
+    "branch_blocked": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "branch_blocked"
+      ]
+    },
+    "changed_source": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "changed_source"
+      ]
+    },
+    "behavior_lock": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "behavior_lock"
+      ]
+    },
+    "behavior_clear": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "behavior_clear"
+      ]
+    }
+  },
+  "rules": [
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "valid_review"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "missing_capture"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "missing_inspect"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "missing_report"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "order_capture_inspect"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "order_inspect_report"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "boundary_read_only"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "boundary_source_authority"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "boundary_evidence"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "branch_findings"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "branch_clear"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "branch_blocked"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_review_cases.py"
+      ],
+      "tests": [
+        "changed_source"
+      ]
+    },
+    {
+      "paths": [
+        "evals/cases.json",
+        "scripts/evaluate.py"
+      ],
+      "tests": [
+        "valid_review",
+        "missing_capture",
+        "missing_inspect",
+        "missing_report",
+        "order_capture_inspect",
+        "order_inspect_report",
+        "boundary_read_only",
+        "boundary_source_authority",
+        "boundary_evidence",
+        "branch_findings",
+        "branch_clear",
+        "branch_blocked",
+        "changed_source",
+        "behavior_lock",
+        "behavior_clear"
+      ]
+    },
+    {
+      "paths": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "README.md",
+        "SKILL.md",
+        "LICENSE"
+      ],
+      "tests": [],
+      "reason": "Review changed instructions; unrelated executable cases are not selected."
+    }
+  ],
+  "final_checks": {
+    "valid_review": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "valid_review"
+      ]
+    },
+    "missing_capture": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "missing_capture"
+      ]
+    },
+    "missing_inspect": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "missing_inspect"
+      ]
+    },
+    "missing_report": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "missing_report"
+      ]
+    },
+    "order_capture_inspect": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "order_capture_inspect"
+      ]
+    },
+    "order_inspect_report": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "order_inspect_report"
+      ]
+    },
+    "boundary_read_only": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "boundary_read_only"
+      ]
+    },
+    "boundary_source_authority": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "boundary_source_authority"
+      ]
+    },
+    "boundary_evidence": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "boundary_evidence"
+      ]
+    },
+    "branch_findings": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "branch_findings"
+      ]
+    },
+    "branch_clear": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "branch_clear"
+      ]
+    },
+    "branch_blocked": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "branch_blocked"
+      ]
+    },
+    "changed_source": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "changed_source"
+      ]
+    },
+    "behavior_lock": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "behavior_lock"
+      ]
+    },
+    "behavior_clear": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "behavior_clear"
+      ]
+    }
+  }
+}

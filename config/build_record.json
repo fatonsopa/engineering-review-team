@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "source": {
+    "name": "engineering-review",
+    "description": "Independently review engineering changes against exact sources and constraints; capture evidence and return actionable findings, no-findings or blocked results before integration.",
+    "instructions": "Use this skill for an independent engineering review before integration. Read [Engineering review Technical Standard (STD)](references/review_standard.md) first; it owns the review rules. The reusable role is assets/agents/engineering-reviewer.md.\n\nConfirm the exact root, selected paths, requirements/constraints, implementer and independent reviewer identity. The lead selects and records the reviewer profile; this skill does not spawn a model or prove its quality. Run only this package's evidence scripts, never target programs.\n\n1. Capture selected files with `python3 scripts/review_contract.py capture --root TARGET --paths module.py --implementer IMPLEMENTER --reviewer REVIEWER --output OUTSIDE_TARGET/capture.json`. Optional `--requested-model` and `--requested-effort` record the lead's request. Replace uppercase placeholders with supplied values.\n2. Read the captured text and necessary caller/requirement context. If more source is needed, obtain a new explicit capture. Record inspection with `python3 scripts/review_contract.py inspect --capture OUTSIDE_TARGET/capture.json --paths module.py --notes \"Scope, actual flow and limitations\" --output OUTSIDE_TARGET/inspection.json`.\n3. Write a report JSON with capture_id, reviewer, decision, summary, findings, limitations, observed_model, observed_effort, actions, checks and source_instructions_followed. Use null for unexposed model/effort. Set source_instructions_followed to false. Findings contain title, severity, path, sha256, start_line, end_line, evidence, impact, correction and verification. Each check contains name, status (not_run or supplied_evidence) and source (null or a captured path). Use the shared standard's decision/severity rules.\n4. Validate using `python3 scripts/review_contract.py report --capture OUTSIDE_TARGET/capture.json --inspection OUTSIDE_TARGET/inspection.json --report OUTSIDE_TARGET/report.json --output OUTSIDE_TARGET/receipt.json`. Deliver the report and its limitations to the lead. A valid receipt establishes structural/source consistency, not semantic correctness or integration approval.\n\nThe scripts reject stale or out-of-scope citations. On refusal, preserve artifacts and correct the supported problem or obtain the missing source; do not edit receipts or claim success. If Python/file tools are unavailable, return the review with validation explicitly unperformed. Do not execute target code as a fallback.\n",
+    "resources": [
+      {
+        "path": "references/review_standard.md",
+        "purpose": "Shared Technical Standard (STD) for engineering reviews.",
+        "when": "performing or assessing a review",
+        "outputs": [
+          "A source-grounded bounded review."
+        ]
+      },
+      {
+        "path": "assets/agents/engineering-reviewer.md",
+        "purpose": "Reviewer role that loads this skill and its shared standard.",
+        "when": "configuring an independent reviewer role",
+        "outputs": [
+          "A separate reviewer role."
+        ]
+      },
+      {
+        "path": "scripts/review_contract.py",
+        "purpose": "Source capture and report validation.",
+        "when": "capturing source and delivering a report",
+        "outputs": [
+          "Snapshot and validated report receipt."
+        ]
+      }
+    ],
+    "documentation": {
+      "title": "Engineering review",
+      "summary": "A portable independent review workflow with one shared Technical Standard (STD), a reusable reviewer role and source-bound report checks. AI judges defects; Python checks evidence consistency.",
+      "prerequisites": [
+        "Python 3 standard library and a tool-enabled host that can read the selected source and write artifacts outside it.",
+        "A lead-supplied candidate scope and reviewer distinct from the implementer. Host permissions and model availability are configured separately."
+      ],
+      "setup": [],
+      "quick_start": {
+        "prompt": "Review module.py against its stated behavior. Keep the target unchanged and return a source-bound report.",
+        "expected_result": "A structured report, capture/inspection artifacts and a mechanical validation receipt, with actual evidence limits."
+      },
+      "scenarios": [
+        {
+          "title": "Review a bounded change",
+          "prompt": "Review parser.py and its selected caller against the supplied requirements before integration.",
+          "expected_result": "Supported actionable findings or a no-findings result with inspected scope and unrun checks."
+        },
+        {
+          "title": "Review changed sources",
+          "prompt": "Follow up after the selected source changed. Preserve the previous report and review the current bytes.",
+          "expected_result": "A fresh capture and affected review; the old source-bound report is not reused as current approval."
+        }
+      ],
+      "verification": {
+        "command": {
+          "argv": [
+            "python3",
+            "scripts/check_review_cases.py",
+            "all"
+          ]
+        },
+        "expected_result": "Thirteen authored mechanical controls pass; this does not establish AI review quality or host behavior."
+      },
+      "troubleshooting": [
+        {
+          "problem": "The report is refused after a source change.",
+          "solution": "Preserve the old artifacts, capture current selected bytes and review the affected change before validating again."
+        },
+        {
+          "problem": "The host cannot expose its exact model identity.",
+          "solution": "Record the requested profile and keep observed_model null; do not infer provider identity or switch accounts."
+        }
+      ],
+      "support": "Give the maintaining lead the exact package/source hashes, failed control or refusal and redacted evidence. Do not include credentials.",
+      "repository": {
+        "text": "The repository itself is the installable skill. The agent asset describes a role; host activation and enforcement require separate configuration.",
+        "links": [
+          {
+            "label": "Engineering review Technical Standard (STD)",
+            "path": "references/review_standard.md"
+          },
+          {
+            "label": "Reviewer agent asset",
+            "path": "assets/agents/engineering-reviewer.md"
+          }
+        ]
+      },
+      "license": "MIT, Manaferra Inc.",
+      "testing": {
+        "prepare": "Use disposable independent source fixtures and keep evidence outside them. Real behavioral runs need a fresh performing context and captured tool trace.",
+        "run_command": {
+          "argv": [
+            "python3",
+            "scripts/evaluate.py",
+            "--package",
+            ".",
+            "--allow-exec"
+          ]
+        },
+        "acceptance_criteria": [
+          "Mechanical contract controls pass on exact package bytes.",
+          "Required actual behavioral cases receive independent source-bound assessment; unrun hosts remain unverified."
+        ],
+        "improvement_steps": [
+          "Locate a concrete failure, preserve its evidence and change only the responsible code or instruction.",
+          "Repeat affected controls and the same frozen behavioral task within the configured bounds."
+        ]
+      }
+    }
+  },
+  "managed_hashes": {
+    "AGENTS.md": "0fe2498663f4b1b6333e76fbaab219cac160a62fba4fca3bb02867682873646a",
+    "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "LICENSE": "ba9e18f177db112edcb7a357fdb9398eff1cace15c964f09546c9d9135f2c97a",
+    "README.md": "203e6a3b4cc0fd6dabaa72027847315ae5abb5fb2b4432c0089e6fb0a1276177",
+    "SKILL.md": "c9a687e911140973d3cadb231b3ad91ba57910a1cf206e41a2cacb06925758d2",
+    "config/documentation.json": "28496d75bac14719d961e25c6252027ae29acf8e74db710e80f27694f5cd3ea1",
+    "config/domains.json": "07751779128d38dcd903b22fc6f90f9884d3552c1366a93d6805a766adcd29f1",
+    "config/host_policy.json": "b048a23f50051e76035155925611201e862eb1529328a268a565e55b76bdc419",
+    "config/host_validation.json": "a48f3e66a15d628d40efae9cf1e9f73366d5f8cbbaf24a7f50a7874d446268db",
+    "config/repository_layout.json": "f7b1cd2ac96b0ee70ba66e51761349fafd9ccec35f7889c0a0ff55175d29cb19",
+    "config/test_impact.json": "e5e7ade477353ba55464293ce0f935bdd14c4b9148b36979ba136ed09ae74fc3",
+    "evals/cases.json": "679ef9af1da3fd961f07b1fcf433083d402efc0d25b87c5b05317cfb2ad1a0a9",
+    "scripts/continuation.py": "e890f5b6326817f6a24584a2ce8dd7bd9174f8fee088a4debb179e6ab053ab17",
+    "scripts/evaluate.py": "3c452371f2ada8c77b4918d30deedd2a0ec61585d652c28445f5f4eff7c58278",
+    "scripts/host_coverage.py": "52dbb3da8825870131d2abe6038b7e6db1881c2efd25362e3186093e00743c33",
+    "scripts/install_skill.py": "3f036e607e6a743eee567725bddce523610901dbf1c808f5354ddf1756f40fe3",
+    "scripts/provider_results.py": "1b0693a0cd16d9db8c3bd9429e485552968038d9ebfea1ee5bdfb071b25bd3e4",
+    "scripts/repository_files.py": "03c5aebf30f536ed6bbb47ab5756c1d3a1fe88d8dd6bfa8cd5e4e37499514794",
+    "scripts/repository_layout.py": "127cf944ab6fbba40bf45d449817fd5a14cb916efbec7eec776799473279358c",
+    "scripts/run_tests.py": "845aa90930800e5855ed73983a5b61c34aff80d823dd2918680d967ed4bf02b5"
+  }
+}
