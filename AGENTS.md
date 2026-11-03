@@ -22,4 +22,6 @@ Keep repository workflow rules in AGENTS.md. Always provide CLAUDE.md with an @A
 
 The shared testing and approval rules above take precedence over conflicting project notes.
 
-Keep shared review rules in references/review_standard.md. Change mechanics and affected contract controls together. Run only impacted package controls while editing, preserve failed attempts and use actual tool-enabled behavioral observations for semantic claims. Keep operational artifacts outside the repository. CLAUDE.md imports these repository instructions.
+Keep authority in references/review_policy.md and evidence rules in references/review_standard.md. Role assets load those shared owners and their conditional domain references. Keep one root skill and host-specific assets separate.
+
+Change mechanics and affected controls together. Preserve v1 cases as historical scope; expanded coordination criteria live separately. Keep operational evidence outside the repository. Never import application-specific scripts or dependencies. Actual host observations are required for host behavior claims.

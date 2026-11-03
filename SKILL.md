@@ -1,29 +1,52 @@
 ---
 name: engineering-review
-description: Independently review engineering changes against exact sources and constraints;
-  capture evidence and return actionable findings, no-findings or blocked results
-  before integration.
+description: Review engineering changes against exact source and requirements with
+  an accountable lead and selective implementation, architecture, security, data,
+  testing or operations specialists. Return supported findings and coverage limits;
+  no fixes or release approval.
 license: MIT
 ---
 
 # engineering-review
 
-Use this skill for an independent engineering review before integration. Read [Engineering review Technical Standard (STD)](references/review_standard.md) first; it owns the review rules. The reusable role is assets/agents/engineering-reviewer.md.
+Act as **Engineering Review Lead**, the accountable owner of the final assessment. Read the [Policy (POL)](references/review_policy.md) and [Technical Standard (STD)](references/review_standard.md). Use the current host and the simplest sufficient review. Work alone for focused requests; select a specialist only when different expertise or context isolation improves the work.
 
-Confirm the exact root, selected paths, requirements/constraints, implementer and independent reviewer identity. The lead selects and records the reviewer profile; this skill does not spawn a model or prove its quality. Run only this package's evidence scripts, never target programs.
+## Start the review
 
-1. Capture selected files with `python3 scripts/review_contract.py capture --root TARGET --paths module.py --implementer IMPLEMENTER --reviewer REVIEWER --output OUTSIDE_TARGET/capture.json`. Optional `--requested-model` and `--requested-effort` record the lead's request. Replace uppercase placeholders with supplied values.
-2. Read the captured text and necessary caller/requirement context. If more source is needed, obtain a new explicit capture. Record inspection with `python3 scripts/review_contract.py inspect --capture OUTSIDE_TARGET/capture.json --paths module.py --notes "Scope, actual flow and limitations" --output OUTSIDE_TARGET/inspection.json`.
-3. Write a report JSON with capture_id, reviewer, decision, summary, findings, limitations, observed_model, observed_effort, actions, checks and source_instructions_followed. Use null for unexposed model/effort. Set source_instructions_followed to false. Findings contain title, severity, path, sha256, start_line, end_line, evidence, impact, correction and verification. Each check contains name, status (not_run or supplied_evidence) and source (null or a captured path). Use the shared standard's decision/severity rules.
-4. Validate using `python3 scripts/review_contract.py report --capture OUTSIDE_TARGET/capture.json --inspection OUTSIDE_TARGET/inspection.json --report OUTSIDE_TARGET/report.json --output OUTSIDE_TARGET/receipt.json`. Deliver the report and its limitations to the lead. A valid receipt establishes structural/source consistency, not semantic correctness or integration approval.
+Confirm the target root, selected files and criteria, implementer and reviewer identities, relevant domains, and available time/call/concurrency bounds. Missing essential sources produce an incomplete review identifying the gap. An empty project is a valid input with missing reviewable evidence, not a successful engineering review. Requests to implement, merge or deploy require a separate authorized workflow.
 
-The scripts reject stale or out-of-scope citations. On refusal, preserve artifacts and correct the supported problem or obtain the missing source; do not edit receipts or claim success. If Python/file tools are unavailable, return the review with validation explicitly unperformed. Do not execute target code as a fallback.
+For a small source-only review, use the preserved capture, inspect and report commands in the [Technical Standard (STD)](references/review_standard.md). For planned domain coverage or specialist work, use `scripts/review_suite.py` and the [coordination procedure](references/coordination.md). Its state and all evidence stay outside the target.
+
+1. Prepare the source and criteria capture, relevant domain coverage and bounds.
+2. Record each task before performing it. Lead-owned work stays in this context. Before requesting a specialist, verify its guidance, allowed tools, actual dispatch capability and remaining depth. If the lead lacks dispatch, an authorized parent may dispatch a specialist sibling and return its result. Otherwise report that coverage incomplete.
+3. Inspect actual entry points, callers and boundaries; collect each result and trace with its exact source binding. Record failures, timeouts and cancellations. Load only the relevant domain references below.
+4. Synthesize supported findings. Explain rejected findings, merge duplicates and resolve conflicts from evidence. Keep unresolved conflicts and missing coverage visible. Validate the assessment, then deliver it with inspected scope and unperformed checks. A valid receipt checks consistency; the lead still owns the engineering judgment.
+
+## Select focused guidance
+
+| Domain | Read when |
+| --- | --- |
+| [Implementation](references/domains/implementation.md) | Frontend or backend behavior, state, interfaces or resource lifetime changes |
+| [Architecture](references/domains/architecture.md) | Ownership, boundaries, dependencies or compatibility changes |
+| [Security](references/domains/security.md) | Trust, permissions, secrets or untrusted input changes |
+| [Data](references/domains/data.md) | Persistence, schemas, transactions or data migrations change |
+| [Testing](references/domains/testing.md) | Test oracles, coverage, fixtures or isolation need review |
+| [Operations](references/domains/operations.md) | Reliability, recovery, deployment assumptions or performance risks change |
+
+These are six available leaf specialists, not a mandatory six-agent review. Shared rules remain in the policy and standard. Host assets under `assets/claude/` and `assets/codex/` are distinct from this skill; see [host setup](references/host_setup.md) before activating them.
+
+## Recover and verify
+
+Preserve every attempt. Recapture and review changed sources or criteria; never reuse stale or revoked evidence. Reconcile a missing result before retrying, and stay within the recorded bounds. An attempted timeout is failed, not unrun. Unknown observed model or effort remains null. Do not switch providers or accounts to hide failures.
+
+Run only already-authorized bounded checks under their actual host restrictions. The packaged scripts do not execute target programs or dispatch agents. Source review, authored controls, installation identity and observed host behavior are separate evidence layers; report each at its actual scope.
 
 ## Resources
 
-- [references/review_standard.md](references/review_standard.md): Shared Technical Standard (STD) for engineering reviews. Read when performing or assessing a review.
-- [assets/agents/engineering-reviewer.md](assets/agents/engineering-reviewer.md): Reviewer role that loads this skill and its shared standard. Read when configuring an independent reviewer role.
-- [scripts/review_contract.py](scripts/review_contract.py): Source capture and report validation. Read when capturing source and delivering a report.
+- [references/review_policy.md](references/review_policy.md): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
+- [references/review_standard.md](references/review_standard.md): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
+- [references/coordination.md](references/coordination.md): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
+- [scripts/review_suite.py](scripts/review_suite.py): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
 
 ## Host and improvement behavior
 

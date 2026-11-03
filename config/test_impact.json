@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "tests": {
-    "valid_review": {
+    "behavior_selective": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -9,10 +9,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "valid_review"
+        "behavior_selective"
       ]
     },
-    "missing_capture": {
+    "boundary_authority": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -20,10 +20,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "missing_capture"
+        "boundary_authority"
       ]
     },
-    "missing_inspect": {
+    "boundary_binding": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -31,10 +31,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "missing_inspect"
+        "boundary_binding"
       ]
     },
-    "missing_report": {
+    "boundary_bounds": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -42,10 +42,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "missing_report"
+        "boundary_bounds"
       ]
     },
-    "order_capture_inspect": {
+    "branch_incomplete": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -53,10 +53,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "order_capture_inspect"
+        "branch_incomplete"
       ]
     },
-    "order_inspect_report": {
+    "branch_siblings": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -64,10 +64,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "order_inspect_report"
+        "branch_siblings"
       ]
     },
-    "boundary_read_only": {
+    "branch_solo": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -75,10 +75,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "boundary_read_only"
+        "branch_solo"
       ]
     },
-    "boundary_source_authority": {
+    "omission_collect": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -86,10 +86,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "boundary_source_authority"
+        "omission_collect"
       ]
     },
-    "boundary_evidence": {
+    "omission_dispatch": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -97,10 +97,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "boundary_evidence"
+        "omission_dispatch"
       ]
     },
-    "branch_findings": {
+    "omission_prepare": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -108,10 +108,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "branch_findings"
+        "omission_prepare"
       ]
     },
-    "branch_clear": {
+    "omission_synthesize": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -119,10 +119,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "branch_clear"
+        "omission_synthesize"
       ]
     },
-    "branch_blocked": {
+    "order_collect_synthesize": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -130,10 +130,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "branch_blocked"
+        "order_collect_synthesize"
       ]
     },
-    "changed_source": {
+    "order_dispatch_collect": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -141,10 +141,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "changed_source"
+        "order_dispatch_collect"
       ]
     },
-    "behavior_lock": {
+    "order_prepare_dispatch": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -152,10 +152,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "behavior_lock"
+        "order_prepare_dispatch"
       ]
     },
-    "behavior_clear": {
+    "recovery_reuse": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -163,113 +163,140 @@
         ".",
         "--allow-exec",
         "--case",
-        "behavior_clear"
+        "recovery_reuse"
+      ]
+    },
+    "success": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "success"
       ]
     }
   },
   "rules": [
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "valid_review"
+        "boundary_authority"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "missing_capture"
+        "boundary_binding"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "missing_inspect"
+        "boundary_bounds"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "missing_report"
+        "branch_incomplete"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "order_capture_inspect"
+        "branch_siblings"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "order_inspect_report"
+        "branch_solo"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "boundary_read_only"
+        "omission_collect"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "boundary_source_authority"
+        "omission_dispatch"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "boundary_evidence"
+        "omission_prepare"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "branch_findings"
+        "omission_synthesize"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "branch_clear"
+        "order_collect_synthesize"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "branch_blocked"
+        "order_dispatch_collect"
       ]
     },
     {
       "paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_suite_cases.py"
       ],
       "tests": [
-        "changed_source"
+        "order_prepare_dispatch"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_suite_cases.py"
+      ],
+      "tests": [
+        "recovery_reuse"
+      ]
+    },
+    {
+      "paths": [
+        "scripts/check_suite_cases.py"
+      ],
+      "tests": [
+        "success"
       ]
     },
     {
@@ -278,21 +305,22 @@
         "scripts/evaluate.py"
       ],
       "tests": [
-        "valid_review",
-        "missing_capture",
-        "missing_inspect",
-        "missing_report",
-        "order_capture_inspect",
-        "order_inspect_report",
-        "boundary_read_only",
-        "boundary_source_authority",
-        "boundary_evidence",
-        "branch_findings",
-        "branch_clear",
-        "branch_blocked",
-        "changed_source",
-        "behavior_lock",
-        "behavior_clear"
+        "behavior_selective",
+        "boundary_authority",
+        "boundary_binding",
+        "boundary_bounds",
+        "branch_incomplete",
+        "branch_siblings",
+        "branch_solo",
+        "omission_collect",
+        "omission_dispatch",
+        "omission_prepare",
+        "omission_synthesize",
+        "order_collect_synthesize",
+        "order_dispatch_collect",
+        "order_prepare_dispatch",
+        "recovery_reuse",
+        "success"
       ]
     },
     {
@@ -308,7 +336,7 @@
     }
   ],
   "final_checks": {
-    "valid_review": {
+    "behavior_selective": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -316,10 +344,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "valid_review"
+        "behavior_selective"
       ]
     },
-    "missing_capture": {
+    "boundary_authority": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -327,10 +355,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "missing_capture"
+        "boundary_authority"
       ]
     },
-    "missing_inspect": {
+    "boundary_binding": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -338,10 +366,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "missing_inspect"
+        "boundary_binding"
       ]
     },
-    "missing_report": {
+    "boundary_bounds": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -349,10 +377,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "missing_report"
+        "boundary_bounds"
       ]
     },
-    "order_capture_inspect": {
+    "branch_incomplete": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -360,10 +388,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "order_capture_inspect"
+        "branch_incomplete"
       ]
     },
-    "order_inspect_report": {
+    "branch_siblings": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -371,10 +399,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "order_inspect_report"
+        "branch_siblings"
       ]
     },
-    "boundary_read_only": {
+    "branch_solo": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -382,10 +410,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "boundary_read_only"
+        "branch_solo"
       ]
     },
-    "boundary_source_authority": {
+    "omission_collect": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -393,10 +421,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "boundary_source_authority"
+        "omission_collect"
       ]
     },
-    "boundary_evidence": {
+    "omission_dispatch": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -404,10 +432,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "boundary_evidence"
+        "omission_dispatch"
       ]
     },
-    "branch_findings": {
+    "omission_prepare": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -415,10 +443,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "branch_findings"
+        "omission_prepare"
       ]
     },
-    "branch_clear": {
+    "omission_synthesize": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -426,10 +454,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "branch_clear"
+        "omission_synthesize"
       ]
     },
-    "branch_blocked": {
+    "order_collect_synthesize": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -437,10 +465,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "branch_blocked"
+        "order_collect_synthesize"
       ]
     },
-    "changed_source": {
+    "order_dispatch_collect": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -448,10 +476,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "changed_source"
+        "order_dispatch_collect"
       ]
     },
-    "behavior_lock": {
+    "order_prepare_dispatch": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -459,10 +487,10 @@
         ".",
         "--allow-exec",
         "--case",
-        "behavior_lock"
+        "order_prepare_dispatch"
       ]
     },
-    "behavior_clear": {
+    "recovery_reuse": {
       "argv": [
         "{python}",
         "scripts/evaluate.py",
@@ -470,7 +498,18 @@
         ".",
         "--allow-exec",
         "--case",
-        "behavior_clear"
+        "recovery_reuse"
+      ]
+    },
+    "success": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--allow-exec",
+        "--case",
+        "success"
       ]
     }
   }

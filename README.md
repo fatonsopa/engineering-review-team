@@ -1,11 +1,12 @@
-# Engineering review
+# Engineering Review
 
-A portable independent review workflow with one shared Technical Standard (STD), a reusable reviewer role and source-bound report checks. AI judges defects; Python checks evidence consistency.
+One Engineering Review installation with an accountable lead and six optional specialists: implementation, architecture, security, data, testing and operations. The lead selects useful specialists and owns the final assessment; Python checks evidence consistency.
 
 ## Requirements
 
-- Python 3 standard library and a tool-enabled host that can read the selected source and write artifacts outside it.
-- A lead-supplied candidate scope and reviewer distinct from the implementer. Host permissions and model availability are configured separately.
+- Python 3 standard library; Unix file locking for suite coordination.
+- Explicit source files, criteria and actual implementer/reviewer identities.
+- Host-native file access; no application credentials or another provider CLI required for normal use.
 
 ## Installation
 
@@ -39,40 +40,41 @@ Download the repository ZIP, extract it, and use the folder containing SKILL.md 
 
 Explicitly invoke the skill before giving it a task. Examples below use `/engineering-review`. Use `@engineering-review` in ChatGPT desktop and `$engineering-review` in Codex.
 
-> /engineering-review Review module.py against its stated behavior. Keep the target unchanged and return a source-bound report.
+> /engineering-review Review handler.py and requirements.txt in the supplied project. Keep source unchanged. Use the lead alone unless a specialist materially improves the review. Return supported findings and uncovered work.
 
-A structured report, capture/inspection artifacts and a mechanical validation receipt, with actual evidence limits.
+Exact source capture, located findings or supported no-findings, and explicit coverage limits. Missing essential input yields an incomplete review.
 
 ## Usage scenarios
 
-### Review a bounded change
+### Review one function
 
-> /engineering-review Review parser.py and its selected caller against the supplied requirements before integration.
+> /engineering-review Review parser.py, its caller and criteria.txt; keep the target unchanged.
 
-Supported actionable findings or a no-findings result with inspected scope and unrun checks.
+Lead-owned implementation review with exact citations and unrun checks.
 
-### Review changed sources
+### Review a tenant-sensitive storage change
 
-> /engineering-review Follow up after the selected source changed. Preserve the previous report and review the current bytes.
+> /engineering-review Review handler.py, storage.py and tenant criteria. Select security/data review only when useful.
 
-A fresh capture and affected review; the old source-bound report is not reused as current approval.
+Source-bound specialist results returned to the lead for deduplication, conflict resolution and coverage assessment.
 
 ## Verification
 
 ```sh
-python3 scripts/check_review_cases.py all
+python3 scripts/check_suite_cases.py success
 ```
 
-Thirteen authored mechanical controls pass; this does not establish AI review quality or host behavior.
+The authored coordination control records prepare, dispatch, collect and synthesize. This is not an actual host or model-quality result.
 
 ## Evaluate and improve results
 
-Use disposable independent source fixtures and keep evidence outside them. Real behavioral runs need a fresh performing context and captured tool trace.
+Keep private evidence outside source. Preserve the original 13 v1 controls and cases under evals/v1_cases.json. Freeze current evals/cases.json and evals/suite_cases.json before performing tasks. Actual observations, discovery and specialist returns remain separate from controls.
 
 ### Acceptance criteria
 
-- Mechanical contract controls pass on exact package bytes.
-- Required actual behavioral cases receive independent source-bound assessment; unrun hosts remain unverified.
+- Current mechanical suite passes; v1 preservation controls remain separately auditable.
+- Fresh performing tasks and public traces establish selected specialist behavior and lead synthesis.
+- Actual Claude Code and Codex runs are required before two-host acceptance; missing coverage stays incomplete.
 
 ### Run the evaluations
 
@@ -118,6 +120,10 @@ Preserve the old artifacts, capture current selected bytes and review the affect
 
 Record the requested profile and keep observed_model null; do not infer provider identity or switch accounts.
 
+### A nested lead has no dispatch tool or sufficient depth.
+
+Use an authorized parent to dispatch selected specialist siblings and return results to the lead, or mark uncovered work incomplete. See references/host_setup.md.
+
 ## Support
 
 Give the maintaining lead the exact package/source hashes, failed control or refusal and redacted evidence. Do not include credentials.
@@ -130,10 +136,12 @@ MIT, Manaferra Inc.
 
 ## Documentation
 
-The repository itself is the installable skill. The agent asset describes a role; host activation and enforcement require separate configuration.
+One root skill with optional Claude Markdown and Codex TOML role assets. Host activation requires actual evidence.
 
-- [Engineering review Technical Standard (STD)](references/review_standard.md)
-- [Reviewer agent asset](assets/agents/engineering-reviewer.md)
+- [Policy (POL)](references/review_policy.md)
+- [Technical Standard (STD)](references/review_standard.md)
+- [Coordination](references/coordination.md)
+- [Host setup](references/host_setup.md)
 
 <!-- repository:end -->
 

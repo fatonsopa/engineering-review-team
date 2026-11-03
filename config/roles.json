@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "lead": "Engineering Review Lead",
+  "specialists": {
+    "implementation": {
+      "reference": "references/domains/implementation.md",
+      "claude": "assets/claude/engineering-review-implementation.md",
+      "codex": "assets/codex/engineering-review-implementation.toml"
+    },
+    "architecture": {
+      "reference": "references/domains/architecture.md",
+      "claude": "assets/claude/engineering-review-architecture.md",
+      "codex": "assets/codex/engineering-review-architecture.toml"
+    },
+    "security": {
+      "reference": "references/domains/security.md",
+      "claude": "assets/claude/engineering-review-security.md",
+      "codex": "assets/codex/engineering-review-security.toml"
+    },
+    "data": {
+      "reference": "references/domains/data.md",
+      "claude": "assets/claude/engineering-review-data.md",
+      "codex": "assets/codex/engineering-review-data.toml"
+    },
+    "testing": {
+      "reference": "references/domains/testing.md",
+      "claude": "assets/claude/engineering-review-testing.md",
+      "codex": "assets/codex/engineering-review-testing.toml"
+    },
+    "operations": {
+      "reference": "references/domains/operations.md",
+      "claude": "assets/claude/engineering-review-operations.md",
+      "codex": "assets/codex/engineering-review-operations.toml"
+    }
+  }
+}

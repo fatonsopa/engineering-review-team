@@ -3,26 +3,40 @@
   "domains": [
     {
       "name": "review-guidance",
-      "purpose": "Authoritative technical review rules and specialized role.",
+      "purpose": "Shared policy, standard, coordination and conditional domain guidance.",
       "owned_paths": [
-        "references/",
-        "assets/"
+        "references/"
       ],
       "depends_on": []
     },
     {
-      "name": "review-evidence",
-      "purpose": "Source snapshot and structured report checks without target execution.",
+      "name": "host-roles",
+      "purpose": "Host-specific role definitions without competing domain rules.",
       "owned_paths": [
-        "scripts/review_contract.py"
+        "assets/"
+      ],
+      "depends_on": [
+        "review-guidance"
+      ]
+    },
+    {
+      "name": "review-evidence",
+      "purpose": "Source capture and deterministic coordination evidence.",
+      "owned_paths": [
+        "scripts/review_contract.py",
+        "scripts/review_suite.py",
+        "config/roles.json"
       ],
       "depends_on": []
     },
     {
       "name": "review-controls",
-      "purpose": "Positive and negative contract controls, separate from model observations.",
+      "purpose": "Mechanical controls and separately frozen semantic cases.",
       "owned_paths": [
-        "scripts/check_review_cases.py"
+        "scripts/check_review_cases.py",
+        "scripts/check_suite_cases.py",
+        "evals/suite_cases.json",
+        "evals/v1_cases.json"
       ],
       "depends_on": [
         "review-evidence"
