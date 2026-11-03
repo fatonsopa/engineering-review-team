@@ -43,10 +43,10 @@ Run only already-authorized bounded checks under their actual host restrictions.
 
 ## Resources
 
-- [references/review_policy.md](references/review_policy.md): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
-- [references/review_standard.md](references/review_standard.md): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
-- [references/coordination.md](references/coordination.md): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
-- [scripts/review_suite.py](scripts/review_suite.py): Shared runtime guidance or bounded evidence mechanics. Read when Use when this component is needed for the review..
+- [references/review_policy.md](references/review_policy.md): Review authority, read-only scope, bounded test exceptions and lead responsibilities. Read when establishing the scope and authority of any review.
+- [references/review_standard.md](references/review_standard.md): Evidence, severity, citation and reporting requirements for supported review findings. Read when inspecting source evidence or preparing a review report.
+- [references/coordination.md](references/coordination.md): Procedure and input formats for recording coverage, dispatch, results and lead synthesis. Read when planning domain coverage or coordinating selected specialists.
+- [scripts/review_suite.py](scripts/review_suite.py): Validates source bindings, prerequisites, execution bounds and review state transitions. Read when using the coordination commands to record and validate review evidence.
 
 ## Host and improvement behavior
 

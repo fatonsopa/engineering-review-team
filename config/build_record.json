@@ -7,26 +7,26 @@
     "resources": [
       {
         "path": "references/review_policy.md",
-        "purpose": "Shared runtime guidance or bounded evidence mechanics.",
-        "when": "Use when this component is needed for the review.",
+        "purpose": "Review authority, read-only scope, bounded test exceptions and lead responsibilities.",
+        "when": "establishing the scope and authority of any review",
         "outputs": []
       },
       {
         "path": "references/review_standard.md",
-        "purpose": "Shared runtime guidance or bounded evidence mechanics.",
-        "when": "Use when this component is needed for the review.",
+        "purpose": "Evidence, severity, citation and reporting requirements for supported review findings.",
+        "when": "inspecting source evidence or preparing a review report",
         "outputs": []
       },
       {
         "path": "references/coordination.md",
-        "purpose": "Shared runtime guidance or bounded evidence mechanics.",
-        "when": "Use when this component is needed for the review.",
+        "purpose": "Procedure and input formats for recording coverage, dispatch, results and lead synthesis.",
+        "when": "planning domain coverage or coordinating selected specialists",
         "outputs": []
       },
       {
         "path": "scripts/review_suite.py",
-        "purpose": "Shared runtime guidance or bounded evidence mechanics.",
-        "when": "Use when this component is needed for the review.",
+        "purpose": "Validates source bindings, prerequisites, execution bounds and review state transitions.",
+        "when": "using the coordination commands to record and validate review evidence",
         "outputs": []
       }
     ],
@@ -130,7 +130,7 @@
     "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
     "LICENSE": "ba9e18f177db112edcb7a357fdb9398eff1cace15c964f09546c9d9135f2c97a",
     "README.md": "78fb43872afc47c3035de2ebc18be90622017cf9279e17c2edfb74a35af6f1d9",
-    "SKILL.md": "3b15e9ce8a71f582cdf2a7693dc3e5d3c530503f9d417f25d95d8a6563a1a975",
+    "SKILL.md": "2916c84758f3265f1363f6c21115c9589dd02c565210f661bced097d22e4dbff",
     "config/documentation.json": "503481de20c8c793d206da06d5d75eee10102120bf01245a65bee3ee95984a0c",
     "config/domains.json": "0ee9ad8b40eb89d93be02721d8ffc7f38cd325446c6534cc28b4616519fa8e0f",
     "config/host_policy.json": "1bc89975dd85920f7cd9d8f9985cd25b05d688f514741f283511783f03f987ab",
