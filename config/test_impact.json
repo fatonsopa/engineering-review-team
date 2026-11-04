@@ -1,17 +1,6 @@
 {
   "schema_version": 1,
   "tests": {
-    "behavior_selective": {
-      "argv": [
-        "{python}",
-        "scripts/evaluate.py",
-        "--package",
-        ".",
-        "--allow-exec",
-        "--case",
-        "behavior_selective"
-      ]
-    },
     "boundary_authority": {
       "argv": [
         "{python}",
@@ -169,143 +158,841 @@
     "success": {
       "argv": [
         "{python}",
+        "scripts/check_suite_cases.py",
+        "success"
+      ]
+    },
+    "scope-boundary-authority": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-boundary-authority"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-boundary-external-inputs": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-boundary-external-inputs"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-boundary-unsupported": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-boundary-unsupported"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-branch-git-nongit": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-branch-git-nongit"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-branch-modes": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-branch-modes"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-omission-applicability": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-omission-applicability"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-omission-bind": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-omission-bind"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-omission-profile": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-omission-profile"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-order-bind-then-applicability": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-order-bind-then-applicability"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-order-profile-then-bind": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-order-profile-then-bind"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-recovery-recapture": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-recovery-recapture"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-budget": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-budget"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-composition": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-composition"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-independence": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-independence"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-subset": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-subset"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-branch-parent": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-branch-parent"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-branch-solo": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-branch-solo"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-branch-specialist": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-branch-specialist"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-assign": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-assign"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-collect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-collect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-dispatch": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-dispatch"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-inspect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-inspect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-order-assign-then-dispatch": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-order-assign-then-dispatch"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-order-dispatch-then-inspect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-order-dispatch-then-inspect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-order-inspect-then-collect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-order-inspect-then-collect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-recovery-failed-worker": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-recovery-failed-worker"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-recovery-missing-input": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-recovery-missing-input"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-boundary-finding-basis": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-boundary-finding-basis"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-boundary-missing-coverage": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-boundary-missing-coverage"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-boundary-serious-finding": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-boundary-serious-finding"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-branch-clean": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-branch-clean"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-branch-improvements": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-branch-improvements"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-branch-incomplete": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-branch-incomplete"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-conflicts": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-conflicts"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-deliver": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-deliver"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-dispositions": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-dispositions"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-validate": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-validate"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-order-conflicts-then-validate": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-order-conflicts-then-validate"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-order-dispositions-then-conflicts": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-order-dispositions-then-conflicts"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-order-validate-then-deliver": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-order-validate-then-deliver"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-recovery-followup": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-recovery-followup"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-boundary-drift": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-boundary-drift"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-boundary-duplicate": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-boundary-duplicate"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-boundary-revocation": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-boundary-revocation"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-branch-followup": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-branch-followup"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-branch-retry": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-branch-retry"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-branch-reuse": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-branch-reuse"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-omission-classify": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-omission-classify"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-omission-reconcile": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-omission-reconcile"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-omission-record": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-omission-record"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-order-classify-then-reconcile": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-order-classify-then-reconcile"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-order-record-then-classify": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-order-record-then-classify"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-recovery-late-return": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-recovery-late-return"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-fixtures": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-fixtures"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-history": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-history"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-identity": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-identity"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-registry": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-registry"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-branch-host-unavailable": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-branch-host-unavailable"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-branch-transfer": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-branch-transfer"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-assess": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-assess"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-freeze": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-freeze"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-pilot": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-pilot"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-preflight": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-preflight"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-order-freeze-then-pilot": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-order-freeze-then-pilot"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-order-pilot-then-assess": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-order-pilot-then-assess"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-order-preflight-then-freeze": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-order-preflight-then-freeze"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-recovery-bounded-retry": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-recovery-bounded-retry"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "v3-preflight": {
+      "argv": [
+        "{python}",
+        "scripts/review_eval.py",
+        "--preflight"
+      ]
+    },
+    "legacy-boundary_authority": {
+      "argv": [
+        "{python}",
         "scripts/evaluate.py",
         "--package",
         ".",
-        "--allow-exec",
         "--case",
+        "boundary_authority",
+        "--allow-exec"
+      ]
+    },
+    "legacy-boundary_binding": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "boundary_binding",
+        "--allow-exec"
+      ]
+    },
+    "legacy-boundary_bounds": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "boundary_bounds",
+        "--allow-exec"
+      ]
+    },
+    "legacy-branch_incomplete": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "branch_incomplete",
+        "--allow-exec"
+      ]
+    },
+    "legacy-branch_siblings": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "branch_siblings",
+        "--allow-exec"
+      ]
+    },
+    "legacy-branch_solo": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "branch_solo",
+        "--allow-exec"
+      ]
+    },
+    "legacy-omission_collect": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "omission_collect",
+        "--allow-exec"
+      ]
+    },
+    "legacy-omission_dispatch": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "omission_dispatch",
+        "--allow-exec"
+      ]
+    },
+    "legacy-omission_prepare": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "omission_prepare",
+        "--allow-exec"
+      ]
+    },
+    "legacy-omission_synthesize": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "omission_synthesize",
+        "--allow-exec"
+      ]
+    },
+    "legacy-order_collect_synthesize": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "order_collect_synthesize",
+        "--allow-exec"
+      ]
+    },
+    "legacy-order_dispatch_collect": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "order_dispatch_collect",
+        "--allow-exec"
+      ]
+    },
+    "legacy-order_prepare_dispatch": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "order_prepare_dispatch",
+        "--allow-exec"
+      ]
+    },
+    "legacy-recovery_reuse": {
+      "argv": [
+        "{python}",
+        "scripts/evaluate.py",
+        "--package",
+        ".",
+        "--case",
+        "recovery_reuse",
+        "--allow-exec"
+      ]
+    },
+    "legacy-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_suite_cases.py",
         "success"
       ]
+    },
+    "alignment-controls": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_alignment.py"
+      ],
+      "timeout_seconds": 90
     }
   },
   "rules": [
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "boundary_authority"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "boundary_binding"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "boundary_bounds"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "branch_incomplete"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "branch_siblings"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "branch_solo"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "omission_collect"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "omission_dispatch"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "omission_prepare"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "omission_synthesize"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "order_collect_synthesize"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "order_dispatch_collect"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "order_prepare_dispatch"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "recovery_reuse"
-      ]
-    },
-    {
-      "paths": [
-        "scripts/check_suite_cases.py"
-      ],
-      "tests": [
-        "success"
-      ]
-    },
     {
       "paths": [
         "evals/cases.json",
         "scripts/evaluate.py"
       ],
       "tests": [
-        "behavior_selective",
         "boundary_authority",
         "boundary_binding",
         "boundary_bounds",
@@ -325,28 +1012,212 @@
     },
     {
       "paths": [
-        "AGENTS.md",
-        "CLAUDE.md",
-        "README.md",
         "SKILL.md",
-        "LICENSE"
+        "references/review_policy.md",
+        "references/review_standard.md",
+        "references/coordination.md",
+        "references/project_profile.md",
+        "references/review_criteria.md",
+        "config/roles.json",
+        "config/review_contracts.json",
+        "scripts/review_contract.py",
+        "scripts/review_suite.py",
+        "scripts/review_manifest.py",
+        "scripts/install_skill.py",
+        "references/host_setup.md",
+        "scripts/check_suite_cases.py",
+        "config/host_validation.json",
+        "config/test_impact.json",
+        "scripts/check_review_v3.py",
+        "scripts/review_eval.py",
+        "scripts/prepare_review_case.py",
+        "evals/review_v3_cases.json",
+        "config/domains.json",
+        "config/documentation.json",
+        "README.md",
+        "AGENTS.md",
+        "references/domains/implementation.md",
+        "references/domains/architecture.md",
+        "references/domains/security.md",
+        "references/domains/data.md",
+        "references/domains/testing.md",
+        "references/domains/operations.md",
+        "references/examples/implementation.md",
+        "references/examples/architecture.md",
+        "references/examples/security.md",
+        "references/examples/data.md",
+        "references/examples/testing.md",
+        "references/examples/operations.md",
+        "assets/claude/engineering-review-lead.md",
+        "assets/claude/engineering-review-implementation.md",
+        "assets/claude/engineering-review-architecture.md",
+        "assets/claude/engineering-review-security.md",
+        "assets/claude/engineering-review-data.md",
+        "assets/claude/engineering-review-testing.md",
+        "assets/claude/engineering-review-operations.md",
+        "assets/codex/engineering-review-lead.toml",
+        "assets/codex/engineering-review-implementation.toml",
+        "assets/codex/engineering-review-architecture.toml",
+        "assets/codex/engineering-review-security.toml",
+        "assets/codex/engineering-review-data.toml",
+        "assets/codex/engineering-review-testing.toml",
+        "assets/codex/engineering-review-operations.toml",
+        "evals/fixtures/review_v3/implementation-defect.json",
+        "evals/fixtures/review_v3/implementation-clean.json",
+        "evals/fixtures/review_v3/architecture-defect.json",
+        "evals/fixtures/review_v3/architecture-clean.json",
+        "evals/fixtures/review_v3/security-defect.json",
+        "evals/fixtures/review_v3/security-clean.json",
+        "evals/fixtures/review_v3/data-defect.json",
+        "evals/fixtures/review_v3/data-clean.json",
+        "evals/fixtures/review_v3/testing-defect.json",
+        "evals/fixtures/review_v3/testing-clean.json",
+        "evals/fixtures/review_v3/operations-defect.json",
+        "evals/fixtures/review_v3/operations-clean.json",
+        "evals/fixtures/review_v3/coordination.json",
+        "evals/fixtures/review_v3/authority.json",
+        "evals/fixtures/review_v3/recovery.json",
+        "evals/fixtures/review_v3/transfer.json",
+        "evals/fixtures/review_v3/external-inputs.json",
+        "scripts/review_v3.py"
+      ],
+      "tests": [
+        "scope-boundary-authority",
+        "scope-boundary-external-inputs",
+        "scope-boundary-unsupported",
+        "scope-branch-git-nongit",
+        "scope-branch-modes",
+        "scope-omission-applicability",
+        "scope-omission-bind",
+        "scope-omission-profile",
+        "scope-order-bind-then-applicability",
+        "scope-order-profile-then-bind",
+        "scope-recovery-recapture",
+        "scope-success",
+        "review-boundary-budget",
+        "review-boundary-composition",
+        "review-boundary-independence",
+        "review-boundary-subset",
+        "review-branch-parent",
+        "review-branch-solo",
+        "review-branch-specialist",
+        "review-omission-assign",
+        "review-omission-collect",
+        "review-omission-dispatch",
+        "review-omission-inspect",
+        "review-order-assign-then-dispatch",
+        "review-order-dispatch-then-inspect",
+        "review-order-inspect-then-collect",
+        "review-recovery-failed-worker",
+        "review-recovery-missing-input",
+        "review-success",
+        "reconcile-boundary-finding-basis",
+        "reconcile-boundary-missing-coverage",
+        "reconcile-boundary-serious-finding",
+        "reconcile-branch-clean",
+        "reconcile-branch-improvements",
+        "reconcile-branch-incomplete",
+        "reconcile-omission-conflicts",
+        "reconcile-omission-deliver",
+        "reconcile-omission-dispositions",
+        "reconcile-omission-validate",
+        "reconcile-order-conflicts-then-validate",
+        "reconcile-order-dispositions-then-conflicts",
+        "reconcile-order-validate-then-deliver",
+        "reconcile-recovery-followup",
+        "reconcile-success",
+        "recover-boundary-drift",
+        "recover-boundary-duplicate",
+        "recover-boundary-revocation",
+        "recover-branch-followup",
+        "recover-branch-retry",
+        "recover-branch-reuse",
+        "recover-omission-classify",
+        "recover-omission-reconcile",
+        "recover-omission-record",
+        "recover-order-classify-then-reconcile",
+        "recover-order-record-then-classify",
+        "recover-recovery-late-return",
+        "recover-success",
+        "verify-boundary-fixtures",
+        "verify-boundary-history",
+        "verify-boundary-identity",
+        "verify-boundary-registry",
+        "verify-branch-host-unavailable",
+        "verify-branch-transfer",
+        "verify-omission-assess",
+        "verify-omission-freeze",
+        "verify-omission-pilot",
+        "verify-omission-preflight",
+        "verify-order-freeze-then-pilot",
+        "verify-order-pilot-then-assess",
+        "verify-order-preflight-then-freeze",
+        "verify-recovery-bounded-retry",
+        "verify-success",
+        "v3-preflight"
+      ],
+      "reason": "V3 contract/role/fixture changes require frozen scoped controls; host observations imported separately."
+    },
+    {
+      "paths": [
+        "scripts/review_suite.py",
+        "scripts/review_contract.py",
+        "scripts/install_skill.py"
+      ],
+      "tests": [
+        "legacy-boundary_authority",
+        "legacy-boundary_binding",
+        "legacy-boundary_bounds",
+        "legacy-branch_incomplete",
+        "legacy-branch_siblings",
+        "legacy-branch_solo",
+        "legacy-omission_collect",
+        "legacy-omission_dispatch",
+        "legacy-omission_prepare",
+        "legacy-omission_synthesize",
+        "legacy-order_collect_synthesize",
+        "legacy-order_dispatch_collect",
+        "legacy-order_prepare_dispatch",
+        "legacy-recovery_reuse",
+        "legacy-success"
+      ],
+      "reason": "These changes must preserve the explicit legacy contract controls."
+    },
+    {
+      "paths": [
+        "config/build_record.json"
       ],
       "tests": [],
-      "reason": "Review changed instructions; unrelated executable cases are not selected."
+      "reason": "Generated build metadata is checked by the Skill Builder package validator. Runtime checks are selected by the other changed owned files."
+    },
+    {
+      "paths": [
+        "scripts/review_alignment.py",
+        "scripts/check_review_alignment.py",
+        "scripts/review_v3.py",
+        "scripts/review_manifest.py",
+        "scripts/review_suite.py",
+        "scripts/run_tests.py",
+        "references/intent_context.md",
+        "evals/alignment_cases.json",
+        "evals/fixtures/alignment.json",
+        "scripts/review_eval.py",
+        "references/domains/*.md",
+        "references/coordination.md",
+        "references/project_profile.md",
+        "references/review_standard.md",
+        "config/review_contracts.json",
+        "config/domains.json",
+        "config/documentation.json",
+        "SKILL.md",
+        "evals/fixtures/alignment_transfer.json"
+      ],
+      "tests": [
+        "alignment-controls"
+      ]
     }
   ],
   "final_checks": {
-    "behavior_selective": {
-      "argv": [
-        "{python}",
-        "scripts/evaluate.py",
-        "--package",
-        ".",
-        "--allow-exec",
-        "--case",
-        "behavior_selective"
-      ]
-    },
     "boundary_authority": {
       "argv": [
         "{python}",
@@ -504,13 +1375,671 @@
     "success": {
       "argv": [
         "{python}",
-        "scripts/evaluate.py",
-        "--package",
-        ".",
-        "--allow-exec",
-        "--case",
+        "scripts/check_suite_cases.py",
         "success"
       ]
+    },
+    "scope-boundary-authority": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-boundary-authority"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-boundary-external-inputs": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-boundary-external-inputs"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-boundary-unsupported": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-boundary-unsupported"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-branch-git-nongit": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-branch-git-nongit"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-branch-modes": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-branch-modes"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-omission-applicability": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-omission-applicability"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-omission-bind": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-omission-bind"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-omission-profile": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-omission-profile"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-order-bind-then-applicability": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-order-bind-then-applicability"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-order-profile-then-bind": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-order-profile-then-bind"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-recovery-recapture": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-recovery-recapture"
+      ],
+      "timeout_seconds": 45
+    },
+    "scope-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "scope-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-budget": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-budget"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-composition": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-composition"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-independence": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-independence"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-boundary-subset": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-boundary-subset"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-branch-parent": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-branch-parent"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-branch-solo": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-branch-solo"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-branch-specialist": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-branch-specialist"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-assign": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-assign"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-collect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-collect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-dispatch": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-dispatch"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-omission-inspect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-omission-inspect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-order-assign-then-dispatch": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-order-assign-then-dispatch"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-order-dispatch-then-inspect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-order-dispatch-then-inspect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-order-inspect-then-collect": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-order-inspect-then-collect"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-recovery-failed-worker": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-recovery-failed-worker"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-recovery-missing-input": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-recovery-missing-input"
+      ],
+      "timeout_seconds": 45
+    },
+    "review-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "review-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-boundary-finding-basis": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-boundary-finding-basis"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-boundary-missing-coverage": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-boundary-missing-coverage"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-boundary-serious-finding": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-boundary-serious-finding"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-branch-clean": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-branch-clean"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-branch-improvements": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-branch-improvements"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-branch-incomplete": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-branch-incomplete"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-conflicts": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-conflicts"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-deliver": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-deliver"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-dispositions": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-dispositions"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-omission-validate": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-omission-validate"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-order-conflicts-then-validate": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-order-conflicts-then-validate"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-order-dispositions-then-conflicts": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-order-dispositions-then-conflicts"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-order-validate-then-deliver": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-order-validate-then-deliver"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-recovery-followup": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-recovery-followup"
+      ],
+      "timeout_seconds": 45
+    },
+    "reconcile-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "reconcile-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-boundary-drift": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-boundary-drift"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-boundary-duplicate": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-boundary-duplicate"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-boundary-revocation": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-boundary-revocation"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-branch-followup": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-branch-followup"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-branch-retry": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-branch-retry"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-branch-reuse": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-branch-reuse"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-omission-classify": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-omission-classify"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-omission-reconcile": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-omission-reconcile"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-omission-record": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-omission-record"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-order-classify-then-reconcile": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-order-classify-then-reconcile"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-order-record-then-classify": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-order-record-then-classify"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-recovery-late-return": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-recovery-late-return"
+      ],
+      "timeout_seconds": 45
+    },
+    "recover-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "recover-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-fixtures": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-fixtures"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-history": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-history"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-identity": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-identity"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-boundary-registry": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-boundary-registry"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-branch-host-unavailable": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-branch-host-unavailable"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-branch-transfer": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-branch-transfer"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-assess": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-assess"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-freeze": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-freeze"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-pilot": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-pilot"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-omission-preflight": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-omission-preflight"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-order-freeze-then-pilot": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-order-freeze-then-pilot"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-order-pilot-then-assess": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-order-pilot-then-assess"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-order-preflight-then-freeze": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-order-preflight-then-freeze"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-recovery-bounded-retry": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-recovery-bounded-retry"
+      ],
+      "timeout_seconds": 45
+    },
+    "verify-success": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_v3.py",
+        "--case",
+        "verify-success"
+      ],
+      "timeout_seconds": 45
+    },
+    "v3-preflight": {
+      "argv": [
+        "{python}",
+        "scripts/review_eval.py",
+        "--preflight"
+      ]
+    },
+    "alignment-controls": {
+      "argv": [
+        "{python}",
+        "scripts/check_review_alignment.py"
+      ],
+      "timeout_seconds": 90
     }
   }
 }

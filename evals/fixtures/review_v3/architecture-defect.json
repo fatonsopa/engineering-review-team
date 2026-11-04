@@ -1,0 +1,11 @@
+{
+  "case_id": "domain-architecture-defect",
+  "request": {
+    "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused architecture review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+    "criteria": "Web and batch consumers must use the same 10 percent surcharge rule. Assess rule ownership and cross-component contract consistency; avoid unrelated redesign.",
+    "criteria_origin": "User-supplied task requirement",
+    "source": {
+      "module.py": "def web_total(items):\n    return sum(items) * 1.1\ndef job_total(items):\n    return sum(items) * 1.2\n"
+    }
+  }
+}

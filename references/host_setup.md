@@ -1,35 +1,27 @@
 # Set up host roles
 
-Engineering Review is one skill installation. Agent files are optional host assets bundled inside it; they do not create seven independent skills. Start with the current host acting as lead. Activate separate roles only when the review benefits from them and the host supports the required controls.
+## Before you begin
 
-## Install the skill
+Host role templates are in `assets/claude/` and `assets/codex/`. Registration resolves their resource paths to the installed package.
 
-From the repository root, `python3 scripts/install_skill.py --host codex` installs to `~/.agents/skills/engineering-review/`. For Claude Code, use `--host claude-code`, which installs to `~/.claude/skills/engineering-review/`. These commands change the user's skill directory; invoke them only when installation is authorized. Use `--help` for explicit target options.
+Engineering Review is one skill with seven optional role assets. Start with the current host as lead. Host definitions are configuration, not proof of discovery, execution or permission enforcement. Normal review requires only the current host; Codex and Claude Code are separate validation targets.
 
-For a disposable test, copy the root skill to the test project's `.agents/skills/engineering-review/` for Codex or `.claude/skills/engineering-review/` for Claude Code. Keep evaluation answers and private run evidence outside the performing context. Confirm actual discovery in a fresh session. Copy identity establishes installation bytes, not activation.
+## Steps
 
-## Activate optional agents
+1. Install the repository using `python3 scripts/install_skill.py --host codex --destination INSTALL/engineering-review` (or --host claude-code). Use a separate disposable destination for validation. The installed repository includes its public resources; no Builder checkout is required.
+2. Preview role registration from the installed package: `python3 scripts/install_skill.py --host codex --source INSTALL/engineering-review --agents-dir PROJECT/.codex/agents --preview`. For Claude Code use --host claude-code and PROJECT/.claude/agents.
+3. Remove --preview to register after the destinations are within the authorized setup. Conflicting existing files are refused, not overwritten. Back up customized roles outside discovery directories and reconcile them explicitly. Registration replaces the asset's {{SKILL_ROOT}} marker with the actual installed root.
+4. Invoke Engineering Review in the host's main context. Discover actual agent tool availability, depth, permissions and remaining bounds. Main-context lead dispatches selectively; bundled nested lead uses authorized parent-dispatched siblings and retains synthesis. Leaf roles never delegate.
+5. Inspect the effective instructions: role asset, inherited/preloaded content, shared policy/standard, domain guide and task. Claude leaves do not preload lead orchestration. Codex roles preserve their assignment if the host exposes inherited skills. Separate contexts can share filesystem/account access; use actual host restrictions and inspect traces.
 
-Claude Code reads Markdown/YAML agent definitions. Copy selected files from `assets/claude/` into the test project's `.claude/agents/`. Their `skills` field explicitly preloads Engineering Review; the skill must be discoverable. Their tools are limited to Read, Glob and Grep. The parent records evidence using the package scripts.
+## Confirm success
 
-Codex reads standalone TOML agent definitions. Copy selected files from `assets/codex/` into `.codex/agents/`. Each has `name`, `description` and `developer_instructions`. Codex agents inherit parent permissions and provider configuration; these files do not create a sandbox. Configure the parent for the narrowest permitted access and inspect the actual trace.
+Verify discovery or explicit loading, correct resource reads, separate performers, selective dispatch, result return, lead final ownership and target preservation. Record actual host/version, requested/observed model and effort, tool/permission configuration and source hashes. Unknown values remain unknown. Test direct, parent fallback and denied-dispatch outcomes. Run scripts/review_eval.py --preflight before freezing the required host matrix. Missing host observations remain unrun and cannot establish support.
 
-The bundled lead uses a parent-dispatched arrangement: it returns specialist requests to its authorized parent, which starts selected sibling specialists and supplies results back to the lead. Leaf roles do not delegate. A main-context lead may use direct dispatch when actually available. Do not assume that a nested lead has an Agent tool or sufficient depth.
+## If it fails
 
-## Verify the chosen arrangement
-
-Record exact package hashes, host/version, requested and observed model/effort, permission configuration, and available account/workspace identity without secrets. Test discovery or explicit loading, source reads, result return, denied dispatch/depth and incomplete coverage. Unknown identity remains null. Native collaboration and static file validation do not establish actual Claude Code or Codex acceptance.
-
-Host/model acceptance is unverified until a fresh performing task and its public trace are reviewed against frozen criteria. Preserve timeouts as failed attempts and report unattempted cases separately. The existing `scripts/host_coverage.py` supports source-bound host evidence; its v1 case contract does not automatically cover the expanded suite.
+Report exact missing capability or loading conflict. Do not imply an agent ran because its file exists. Preserve timeouts as failures and incomplete returns as evidence limits. A direct-loading test is not a registered-agent discovery test. Restore previous customized installation files from their backup if setup fails; preserve review histories outside the installation.
 
 ## Sources
 
-Opened on 2026-11-03. These pages support format and design choices; they do not prove the installed host's capabilities.
-
-- [OpenAI orchestration](https://developers.openai.com/api/docs/guides/agents/orchestration): manager retains final response and selects specialists when useful.
-- [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents): standalone TOML and inherited permissions.
-- [Codex skills](https://learn.chatgpt.com/docs/build-skills): skill discovery and progressive disclosure.
-- [Anthropic workflow principles](https://www.anthropic.com/research/building-effective-agents): use a simple sufficient workflow; tooling details in this 2024 article have changed.
-- [Claude skill authoring](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise entrypoints and conditional resources.
-- [Claude Code subagents](https://code.claude.com/docs/en/sub-agents): Markdown frontmatter, skill preloading and host-specific nested dispatch.
-- [Agent Skills specification](https://agentskills.io/specification): portable skill metadata and directory contract.
+[Claude Code subagents](https://code.claude.com/docs/en/sub-agents) and [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) explain host-specific formats and controls. Recheck actual supported behavior before claiming a new host profile.

@@ -1,0 +1,219 @@
+{
+  "description": "Fresh authored transfer review fixture. Complete bounded source below; no production evidence.",
+  "files": {
+    "checkout.py": "def checkout(session, account, payload, now, store):\n    if session is None:\n        return {\"status\": 401}\n    if session[\"account\"] != account or \"purchase\" not in session[\"scopes\"]:\n        return {\"status\": 403}\n    note = payload.get(\"note\") or \"default\"\n    purchase = store.record(account, payload[\"key\"], note)\n    return {\"status\": 202, \"account\": account, \"purchase\": purchase, \"note\": note}\n",
+    "store.py": "SCHEMA = \"\"\"\nCREATE TABLE purchases (\n  account TEXT NOT NULL,\n  request_key TEXT NOT NULL,\n  note TEXT,\n  PRIMARY KEY (account, request_key)\n);\nCREATE TABLE outbox (event_id TEXT PRIMARY KEY, payload TEXT, sent INTEGER NOT NULL);\n\"\"\"\n\ndef record(db, account, request_key, note):\n    with db.transaction():\n        event_id = db.insert_purchase(account, request_key, note)\n        db.insert_outbox(event_id, {\"account\": account}, sent=0)\n    return event_id\n",
+    "relay.py": "def publish_pending(db, bus):\n    for event in db.pending_outbox():\n        bus.send(event[\"event_id\"], event[\"payload\"])\n        db.mark_sent(event[\"event_id\"])\n\ndef notify(event, remote):\n    for attempt in range(3):\n        try:\n            remote.send(event, timeout=1)\n            return {\"ok\": True}\n        except TimeoutError:\n            continue\n    return {\"ok\": True}\n",
+    "test_checkout.py": "from checkout import checkout\n\ndef test_null_note(fake_store):\n    session = {\"account\": \"0042\", \"scopes\": [\"purchase\"], \"expires_at\": 10}\n    result = checkout(session, \"0042\", {\"key\": \"abc\", \"note\": None}, 1, fake_store)\n    assert result[\"status\"] == 202\n"
+  },
+  "criteria": [
+    {
+      "id": "SEC-A",
+      "text": "Only the authenticated account with purchase permission may reach storage.",
+      "origin": "Owner-supplied accepted checkout intent revision3",
+      "required_domains": [
+        "security"
+      ]
+    },
+    {
+      "id": "SEC-B",
+      "text": "Sessions with expires_at less than or equal to now must be rejected before storage.",
+      "origin": "Owner-supplied accepted checkout intent revision3",
+      "required_domains": [
+        "security"
+      ]
+    },
+    {
+      "id": "ARC-1",
+      "text": "Every committed purchase has durable publication intent that remains discoverable after restart until marked sent. At-least-once publication is permitted; exactly-once external delivery is not required.",
+      "origin": "Owner-supplied accepted checkout intent revision3",
+      "required_domains": [
+        "architecture"
+      ]
+    },
+    {
+      "id": "IMPL-1",
+      "text": "An absent note becomes the string default; an explicit null remains null through storage and response.",
+      "origin": "Owner-supplied accepted checkout intent revision3",
+      "required_domains": [
+        "implementation"
+      ]
+    },
+    {
+      "id": "DATA-1",
+      "text": "SQLite purchase request-key uniqueness is per account, so independent accounts may reuse keys.",
+      "origin": "Owner-supplied accepted checkout intent revision3",
+      "required_domains": [
+        "data"
+      ]
+    },
+    {
+      "id": "TEST-1",
+      "text": "The explicit-null test must assert the null result, so a default string cannot pass as correct null behavior.",
+      "origin": "Owner-supplied accepted checkout intent revision3",
+      "required_domains": [
+        "testing"
+      ]
+    },
+    {
+      "id": "OPS-1",
+      "text": "notify makes at most three timeout attempts and reports ok false to its caller when all attempts time out.",
+      "origin": "Owner-supplied accepted checkout intent revision3",
+      "required_domains": [
+        "operations"
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "id": "INTENT",
+      "filename": "checkout-intent.md",
+      "content": "SEC-A: Only the authenticated account with purchase permission may reach storage.\nSEC-B: Sessions with expires_at less than or equal to now must be rejected before storage.\nARC-1: Every committed purchase has durable publication intent that remains discoverable after restart until marked sent. At-least-once publication is permitted; exactly-once external delivery is not required.\nIMPL-1: An absent note becomes the string default; an explicit null remains null through storage and response.\nDATA-1: SQLite purchase request-key uniqueness is per account, so independent accounts may reuse keys.\nTEST-1: The explicit-null test must assert the null result, so a default string cannot pass as correct null behavior.\nOPS-1: notify makes at most three timeout attempts and reports ok false to its caller when all attempts time out.\n",
+      "origin": "Current owner-supplied checkout requirements",
+      "version": "3",
+      "status": "available",
+      "authority": "agreed",
+      "reason": "Identified as current acceptance intent",
+      "sections": [
+        {
+          "id": "sec-a",
+          "start_line": 1,
+          "end_line": 1,
+          "criteria": [
+            "SEC-A"
+          ],
+          "domains": [
+            "security"
+          ]
+        },
+        {
+          "id": "sec-b",
+          "start_line": 2,
+          "end_line": 2,
+          "criteria": [
+            "SEC-B"
+          ],
+          "domains": [
+            "security"
+          ]
+        },
+        {
+          "id": "arc-1",
+          "start_line": 3,
+          "end_line": 3,
+          "criteria": [
+            "ARC-1"
+          ],
+          "domains": [
+            "architecture"
+          ]
+        },
+        {
+          "id": "impl-1",
+          "start_line": 4,
+          "end_line": 4,
+          "criteria": [
+            "IMPL-1"
+          ],
+          "domains": [
+            "implementation"
+          ]
+        },
+        {
+          "id": "data-1",
+          "start_line": 5,
+          "end_line": 5,
+          "criteria": [
+            "DATA-1"
+          ],
+          "domains": [
+            "data"
+          ]
+        },
+        {
+          "id": "test-1",
+          "start_line": 6,
+          "end_line": 6,
+          "criteria": [
+            "TEST-1"
+          ],
+          "domains": [
+            "testing"
+          ]
+        },
+        {
+          "id": "ops-1",
+          "start_line": 7,
+          "end_line": 7,
+          "criteria": [
+            "OPS-1"
+          ],
+          "domains": [
+            "operations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROPOSAL",
+      "filename": "delivery-proposal.md",
+      "content": "Proposed future exactly-once external notification and10000 purchases per minute; neither is approved or measured.\n",
+      "origin": "Exploratory future design",
+      "version": "draft1",
+      "status": "available",
+      "authority": "proposed",
+      "reason": "Context only",
+      "sections": [
+        {
+          "id": "future",
+          "start_line": 1,
+          "end_line": 1,
+          "criteria": [],
+          "domains": [
+            "architecture",
+            "operations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OLD",
+      "filename": "superseded-design.md",
+      "content": "Superseded discussion assumed no persisted publication intent; inspect the current source and revision3 instead.\n",
+      "origin": "Earlier design discussion",
+      "version": "1",
+      "status": "conflicting",
+      "authority": "superseded",
+      "reason": "Outdated context cannot replace current intent",
+      "sections": [
+        {
+          "id": "old-publication",
+          "start_line": 1,
+          "end_line": 1,
+          "criteria": [],
+          "domains": [
+            "architecture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SOD",
+      "filename": null,
+      "content": null,
+      "origin": "No separate objectives file supplied",
+      "version": "unknown",
+      "status": "missing",
+      "authority": "unknown",
+      "reason": "Optional; OPS-1 is the explicit task contract",
+      "sections": []
+    }
+  ],
+  "assumptions": [
+    "db.transaction atomically commits both inserts or rolls both back; the persisted outbox survives restart and pending_outbox returns every committed sent=0 row. These are supplied adapter guarantees, not independently executed observations.",
+    "If bus.send fails or a process stops before mark_sent, the row remains pending. A crash after send before mark_sent may redeliver; this is permitted by ARC-1.",
+    "The store injected into checkout adapts store.record; the caller is not its low-level signature. Duplicate checkout-request behavior, hidden adapter idempotency and notification-consumer behavior are unknown and outside this review.",
+    "session.expires_at and now share the same supplied integer time unit. SQLite primary-key semantics apply to the shown schema; exact runtime versions are not supplied.",
+    "No target execution, production data, metrics, raw test logs or new approval is supplied."
+  ]
+}

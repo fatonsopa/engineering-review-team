@@ -1,0 +1,106 @@
+{
+  "schema_version": 3,
+  "capture_version": 2,
+  "report_version": 2,
+  "domains": [
+    "implementation",
+    "architecture",
+    "security",
+    "data",
+    "testing",
+    "operations"
+  ],
+  "applicability": [
+    "applicable",
+    "not_applicable",
+    "unresolved"
+  ],
+  "task_kinds": [
+    "initial",
+    "retry",
+    "followup"
+  ],
+  "routes": [
+    "lead",
+    "direct",
+    "parent"
+  ],
+  "terminal_statuses": [
+    "completed",
+    "failed",
+    "timeout",
+    "cancelled"
+  ],
+  "finding_categories": [
+    "defect",
+    "risk_or_improvement",
+    "question"
+  ],
+  "authority": "read-only target; externally recorded evidence; bounded tests only when already authorized",
+  "owners": {
+    "authority": "references/review_policy.md",
+    "evidence": "references/review_standard.md",
+    "roles": "config/roles.json"
+  },
+  "workflow_steps": {
+    "scope": [
+      "profile",
+      "bind",
+      "applicability"
+    ],
+    "review": [
+      "assign",
+      "dispatch",
+      "inspect",
+      "collect"
+    ],
+    "reconcile": [
+      "dispositions",
+      "conflicts",
+      "validate",
+      "deliver"
+    ],
+    "recover": [
+      "record",
+      "classify",
+      "reconcile"
+    ],
+    "verify": [
+      "preflight",
+      "freeze",
+      "pilot",
+      "assess"
+    ]
+  },
+  "current_ledger_version": 4,
+  "supported_ledger_versions": [
+    3,
+    4
+  ],
+  "v4_extensions": {
+    "request": [
+      "alignment"
+    ],
+    "task": [
+      "documents"
+    ],
+    "report": [
+      "criterion_assessments"
+    ],
+    "assessment": [
+      "criterion_dispositions"
+    ],
+    "criterion_statuses": [
+      "satisfied",
+      "contradicted",
+      "partially_satisfied",
+      "not_assessed"
+    ],
+    "reference_kinds": [
+      "source",
+      "evidence",
+      "document"
+    ],
+    "owner": "references/intent_context.md"
+  }
+}

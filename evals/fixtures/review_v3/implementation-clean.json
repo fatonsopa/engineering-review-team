@@ -1,0 +1,11 @@
+{
+  "case_id": "domain-implementation-clean",
+  "request": {
+    "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused implementation review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+    "criteria": "Clamp integers to the inclusive interval 0 through 10.",
+    "criteria_origin": "User-supplied task requirement",
+    "source": {
+      "module.py": "def clamp(x):\n    return min(10, max(0, x))\n"
+    }
+  }
+}

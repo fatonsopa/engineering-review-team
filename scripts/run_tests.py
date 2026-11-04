@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan impacted checks by default; run a full batch only with bound user authorization."""
+"""Plan impacted checks by default; run final checks after artifact-bound author verification."""
 import argparse
 import ast
 import fnmatch
@@ -53,15 +53,51 @@ def broad_command(argv):
     return False
 
 
-def authorize_full(root, authorization):
-    if authorization is None:
-        raise ValueError('Full suites are disabled during iteration. Supply the actual user authorization after the batch is finished.')
-    record = json.loads(Path(authorization).read_text())
-    if record.get('batch_complete') is not True or not isinstance(record.get('user_instruction'), str) or not record['user_instruction'].strip():
-        raise ValueError('Final testing requires the actual user instruction confirming this batch is finished.')
+def verify_implementation_complete(root, completion_record):
+    if completion_record is None:
+        raise ValueError("Full suites are disabled during implementation. Supply the author's implementation-completion record; user approval is not required.")
+    path = Path(completion_record).resolve()
+    if path.is_relative_to(Path(root).resolve()):
+        raise ValueError('Keep implementation-completion records outside the package.')
+    record = json.loads(path.read_text())
+    if not isinstance(record, dict):
+        raise ValueError('The implementation-completion record must be an object.')
+    if record.get('implementation_complete') is not True:
+        raise ValueError('Verify implementation completion before final testing.')
+    if record.get('remaining_implementation_work') != []:
+        raise ValueError('Remaining implementation work prevents final testing.')
+    plan = record.get('implementation_plan')
+    if not isinstance(plan, dict) or not isinstance(plan.get('source'), str) or not plan['source'].strip():
+        raise ValueError('Identify the actual implementation plan or task criteria.')
+    steps = plan.get('steps')
+    if not isinstance(steps, list) or not steps:
+        raise ValueError('Inventory the planned implementation steps.')
+    if any(not isinstance(step, dict) or any(not isinstance(step.get(k), str) or not step[k].strip() for k in ('id', 'result')) for step in steps):
+        raise ValueError('Each implementation step needs an ID and intended result.')
+    identifiers = [step['id'] for step in steps]
+    if len(set(identifiers)) != len(identifiers):
+        raise ValueError('Implementation step IDs must be unique.')
+    delivered = record.get('delivered_steps')
+    if not isinstance(delivered, list) or any(not isinstance(step, dict) or not isinstance(step.get('id'), str) or not step['id'].strip() for step in delivered):
+        raise ValueError('Record delivery evidence for every implementation step.')
+    if len(delivered) != len(steps) or {step.get('id') for step in delivered} != set(identifiers):
+        raise ValueError('Every planned implementation step needs exactly one delivery assessment.')
+    for step in delivered:
+        evidence = step.get('evidence')
+        if step.get('status') != 'delivered' or not isinstance(evidence, list) or not evidence or any(not isinstance(item, str) or not item.strip() for item in evidence):
+            raise ValueError('Undelivered steps or missing delivery evidence prevent final testing.')
+    verifier = record.get('verified_by')
+    if not isinstance(verifier, dict) or any(not isinstance(verifier.get(k), str) or not verifier[k].strip() for k in ('identity', 'method')):
+        raise ValueError('Identify who verified the implementation and how.')
     if record.get('artifact_sha256') != digest(inventory(root)):
-        raise ValueError('Changes after authorization invalidate final testing approval.')
-    return record
+        raise ValueError('Implementation changes invalidate the completion record; verify the new artifact.')
+    return {'record': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+            'limits': 'Checks declared implementation-step coverage and artifact identity. The author must verify the actual plan inventory and delivery evidence; this is not user approval or proof that final tests passed.'}
+
+
+
+def authorize_full(root, authorization):
+    return verify_implementation_complete(root, authorization)
 
 
 def changed_test_methods(root, path):
@@ -104,8 +140,8 @@ def plan(root=ROOT, changed=None, full=False, authorization=None):
             raise ValueError('Changed files must be repository-relative paths.')
     selected, skipped, unmapped = {}, {}, []
     if full:
-        authorize_full(root, authorization)
-        selected = {name: ['User confirmed this batch is finished.'] for name in config['final_checks']}
+        completion = verify_implementation_complete(root, authorization)
+        selected = {name: ['Author verified complete implementation; no remaining implementation work.'] for name in config['final_checks']}
         config = {**config, 'tests': config['final_checks']}
     else:
         for path in paths:
@@ -165,12 +201,17 @@ def plan(root=ROOT, changed=None, full=False, authorization=None):
                     check['argv'] += ['-k', pattern]
             check.pop('_filters')
         checks.append(check)
-    return {'mode': 'full' if full else 'impacted', 'root': str(root), 'changed_files': paths, 'artifact_sha256': digest(inventory(root)), 'checks': checks, 'skipped': skipped, 'unmapped': unmapped, 'executable': not unmapped}
+    return {'mode': 'full' if full else 'impacted', 'root': str(root), 'changed_files': paths, 'artifact_sha256': digest(inventory(root)), 'checks': checks, 'skipped': skipped, 'unmapped': unmapped, 'executable': not unmapped, **({'implementation_completion': completion} if full else {})}
 
 
 def execute(selection):
     if not selection['executable']:
         raise ValueError('Unmapped changes require an impact rule; no full-suite fallback: ' + ', '.join(selection['unmapped']))
+    if selection['mode'] == 'full':
+        proof = selection.get('implementation_completion')
+        if not proof or hashlib.sha256(Path(proof['record']).read_bytes()).hexdigest() != proof['sha256']:
+            raise ValueError('Implementation-completion evidence changed after planning.')
+        verify_implementation_complete(selection['root'], proof['record'])
     results = []
     for check in selection['checks']:
         started = time.monotonic()
@@ -199,10 +240,18 @@ def main(argv=None):
     parser.add_argument('--changed', action='append', help='Exact changed path; otherwise compare the last tested checkpoint or Git HEAD.')
     parser.add_argument('--execute', action='store_true', help='Without this flag, print the selected checks without running them.')
     parser.add_argument('--full', action='store_true')
-    parser.add_argument('--authorization', type=Path, help='User-approved final-testing record bound to artifact_sha256.')
+    parser.add_argument('--completion-record', '--authorization', dest='authorization', type=Path, help='Author-verified implementation completion bound to artifact_sha256; no user batch approval.')
     parser.add_argument('--report', type=Path)
     args = parser.parse_args(argv)
     try:
+        if args.report:
+            target = args.report.resolve()
+            if target.is_relative_to(args.package.resolve()):
+                raise ValueError('Keep test reports outside the repository.')
+            if args.authorization:
+                original = args.authorization.resolve()
+                if target == original or target.exists() and original.exists() and target.samefile(original):
+                    raise ValueError('Test report must not overwrite or alias its implementation-completion record.')
         result = plan(args.package, args.changed, args.full, args.authorization)
         if args.execute:
             result = execute(result)

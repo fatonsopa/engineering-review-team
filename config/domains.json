@@ -2,44 +2,85 @@
   "schema_version": 1,
   "domains": [
     {
-      "name": "review-guidance",
-      "purpose": "Shared policy, standard, coordination and conditional domain guidance.",
+      "name": "guidance",
+      "purpose": "Shared rules, contextual review methods and worked examples.",
       "owned_paths": [
+        "SKILL.md",
         "references/"
       ],
       "depends_on": []
     },
     {
-      "name": "host-roles",
-      "purpose": "Host-specific role definitions without competing domain rules.",
+      "name": "contracts",
+      "purpose": "Typed role/task contracts, manifests and deterministic review validation.",
       "owned_paths": [
-        "assets/"
-      ],
-      "depends_on": [
-        "review-guidance"
-      ]
-    },
-    {
-      "name": "review-evidence",
-      "purpose": "Source capture and deterministic coordination evidence.",
-      "owned_paths": [
+        "config/roles.json",
+        "config/review_contracts.json",
         "scripts/review_contract.py",
         "scripts/review_suite.py",
-        "config/roles.json"
+        "scripts/review_manifest.py",
+        "scripts/review_v3.py",
+        "scripts/review_alignment.py"
       ],
       "depends_on": []
     },
     {
-      "name": "review-controls",
-      "purpose": "Mechanical controls and separately frozen semantic cases.",
+      "name": "host-roles",
+      "purpose": "Host configuration, registration and role-preserving loading.",
       "owned_paths": [
-        "scripts/check_review_cases.py",
-        "scripts/check_suite_cases.py",
-        "evals/suite_cases.json",
-        "evals/v1_cases.json"
+        "assets/",
+        "scripts/install_skill.py"
       ],
       "depends_on": [
-        "review-evidence"
+        "guidance",
+        "contracts"
+      ]
+    },
+    {
+      "name": "verification",
+      "purpose": "Frozen controls, real fixtures and actual-host validation.",
+      "owned_paths": [
+        "evals/",
+        "scripts/check_review_cases.py",
+        "scripts/check_suite_cases.py",
+        "scripts/check_review_v3.py",
+        "scripts/review_eval.py",
+        "scripts/prepare_review_case.py",
+        "config/test_impact.json",
+        "config/host_validation.json",
+        "scripts/check_review_alignment.py"
+      ],
+      "depends_on": [
+        "contracts",
+        "host-roles"
+      ]
+    },
+    {
+      "name": "package",
+      "purpose": "Public documentation, package ownership and existing portable mechanics.",
+      "owned_paths": [
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "LICENSE",
+        "config/domains.json",
+        "config/documentation.json",
+        "config/host_policy.json",
+        "config/build_record.json",
+        "config/repository_layout.json",
+        "scripts/evaluate.py",
+        "scripts/host_coverage.py",
+        "scripts/provider_results.py",
+        "scripts/continuation.py",
+        "scripts/run_tests.py",
+        "scripts/repository_files.py",
+        "scripts/repository_layout.py"
+      ],
+      "depends_on": [
+        "guidance",
+        "contracts",
+        "host-roles",
+        "verification"
       ]
     }
   ]

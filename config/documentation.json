@@ -3,38 +3,43 @@
   "name": "engineering-review",
   "documentation": {
     "title": "Engineering Review",
-    "summary": "One Engineering Review installation with an accountable lead and six optional specialists: implementation, architecture, security, data, testing and operations. The lead selects useful specialists and owns the final assessment; Python checks evidence consistency.",
+    "summary": "One Engineering Review skill with an accountable lead and six conditional specialists. Version 4 adds optional authority-aware project-document routing and exact criterion/domain coverage to the preserved source/evidence and outcome ledger.",
     "prerequisites": [
-      "Python 3 standard library; Unix file locking for suite coordination.",
+      "Python 3.11+ standard library; Unix-like file locking for coordination.",
       "Explicit source files, criteria and actual implementer/reviewer identities.",
       "Host-native file access; no application credentials or another provider CLI required for normal use."
     ],
     "setup": [],
     "quick_start": {
-      "prompt": "Review handler.py and requirements.txt in the supplied project. Keep source unchanged. Use the lead alone unless a specialist materially improves the review. Return supported findings and uncovered work.",
+      "prompt": "/engineering-review Review handler.py and requirements.txt in the supplied project. Keep source unchanged. Use the lead alone unless a specialist materially improves the review. Return supported findings and uncovered work.",
       "expected_result": "Exact source capture, located findings or supported no-findings, and explicit coverage limits. Missing essential input yields an incomplete review."
     },
     "scenarios": [
       {
         "title": "Review one function",
-        "prompt": "Review parser.py, its caller and criteria.txt; keep the target unchanged.",
+        "prompt": "/engineering-review Review parser.py, its caller and criteria.txt; keep the target unchanged.",
         "expected_result": "Lead-owned implementation review with exact citations and unrun checks."
       },
       {
         "title": "Review a tenant-sensitive storage change",
-        "prompt": "Review handler.py, storage.py and tenant criteria. Select security/data review only when useful.",
+        "prompt": "/engineering-review Review handler.py, storage.py and tenant criteria. Select security/data review only when useful.",
         "expected_result": "Source-bound specialist results returned to the lead for deduplication, conflict resolution and coverage assessment."
+      },
+      {
+        "title": "Review against supplied intent",
+        "prompt": "/engineering-review Compare the supplied implementation with current agreed requirements and plan sections. Route relevant sections to the responsible reviewers; continue supported review if optional documents are missing.",
+        "expected_result": "A v4 ledger with a disposition for every assigned criterion and required criterion/domain pair, source-supported findings, separate approved deviations and explicit coverage limits. Use scripts/review_suite.py --v4 and references/intent_context.md. Missing, stale, proposed and conflicting documents retain their actual status."
       }
     ],
     "verification": {
       "command": {
         "argv": [
           "python3",
-          "scripts/check_suite_cases.py",
-          "success"
+          "scripts/review_eval.py",
+          "--preflight"
         ]
       },
-      "expected_result": "The authored coordination control records prepare, dispatch, collect and synthesize. This is not an actual host or model-quality result."
+      "expected_result": "The authoritative v3 corpus has complete input fixtures, coherent role resources and matching host case selection. This is not agent-performance evidence."
     },
     "troubleshooting": [
       {
@@ -69,29 +74,41 @@
         {
           "label": "Host setup",
           "path": "references/host_setup.md"
+        },
+        {
+          "label": "Project profile",
+          "path": "references/project_profile.md"
+        },
+        {
+          "label": "Criteria selection",
+          "path": "references/review_criteria.md"
+        },
+        {
+          "label": "Project intent and alignment",
+          "path": "references/intent_context.md"
         }
       ]
     },
     "license": "MIT, Manaferra Inc.",
     "testing": {
-      "prepare": "Keep private evidence outside source. Preserve the original 13 v1 controls and cases under evals/v1_cases.json. Freeze current evals/cases.json and evals/suite_cases.json before performing tasks. Actual observations, discovery and specialist returns remain separate from controls.",
+      "prepare": "Preserve historical evals/cases.json, evals/v1_cases.json, evals/suite_cases.json and the complete v3 corpus in evals/review_v3_cases.json. Current alignment controls and the scoped v4 behavior case live in evals/alignment_cases.json. Review frozen cases, stage only performing inputs and keep expected answers and run records outside the task context. Default config/host_validation.json retains its full v3 matrix; a scoped v4 host plan must not be described as that full matrix passing. Use impacted checks during implementation and author-verified final-suite eligibility after all implementation is delivered.",
       "run_command": {
         "argv": [
           "python3",
-          "scripts/evaluate.py",
-          "--package",
-          ".",
+          "scripts/review_eval.py",
           "--allow-exec"
         ]
       },
       "acceptance_criteria": [
-        "Current mechanical suite passes; v1 preservation controls remain separately auditable.",
-        "Fresh performing tasks and public traces establish selected specialist behavior and lead synthesis.",
-        "Actual Claude Code and Codex runs are required before two-host acceptance; missing coverage stays incomplete."
+        "Impacted mechanical controls pass without weakening legacy checks.",
+        "Actual defect/clean tasks and public traces establish supported findings, false-positive limits, role ownership and recovery.",
+        "Both frozen Codex and Claude Code matrices require actual reviewed tasks; missing cells remain incomplete.",
+        "V4 rejects assigned and globally omitted criteria, wrong document routing and unsupported deviations; actual scoped host evidence is reported separately from historical matrix coverage."
       ],
       "improvement_steps": [
-        "Locate a concrete failure, preserve its evidence and change only the responsible code or instruction.",
-        "Repeat affected controls and the same frozen behavioral task within the configured bounds."
+        "Run scripts/run_tests.py --execute for mapped impacted controls. Use scripts/review_eval.py with --case and --observations for explicit bounded cases; missing observations remain unrun.",
+        "Fix concrete failures within exact paths; retain failures and frozen criteria. Run scripts/run_tests.py --full --completion-record RECORD.json --execute only after author verification of every planned implementation step.",
+        "Freeze scripts/host_coverage.py with config/host_validation.json, review actual outputs/traces, then assess the same source-bound host plan."
       ]
     }
   }

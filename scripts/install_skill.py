@@ -57,6 +57,31 @@ def make_archive(source, output):
     return {"status": "packaged", "name": name, "path": str(output), "files": len(files)}
 
 
+def register_agents(source, host, destination, preview=False):
+    """Register selected package roles without overwriting customized host files."""
+    source=Path(source).resolve();destination=Path(destination).absolute()
+    if destination.resolve().is_relative_to(source) or destination.is_symlink():
+        raise ValueError('Agent directory must be separate from package and not symlinked.')
+    folder='codex' if host=='codex' else 'claude'
+    roles=json.loads((source/'config/roles.json').read_text())
+    extension='toml' if host=='codex' else 'md'
+    files={}
+    for role in ['lead',*roles['specialists']]:
+        name=f'engineering-review-{role}.{extension}'
+        content=(source/'assets'/folder/name).read_text().replace('{{SKILL_ROOT}}',str(source))
+        target=destination/name
+        if target.is_symlink() or target.exists() and target.read_text()!=content:
+            raise ValueError('Preserve customized agent; conflicting destination: '+str(target))
+        files[name]=content
+    if not preview:
+        destination.mkdir(parents=True,exist_ok=True)
+        for name,content in files.items():
+            target=destination/name
+            if not target.exists():
+                with target.open('x') as stream:stream.write(content)
+    return {'status':'preview' if preview else 'registered','host':host,'skill_root':str(source),'destination':str(destination),'files':list(files),'limits':'Registration is not proof of host loading or behavior.'}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     action = parser.add_mutually_exclusive_group(required=True)
@@ -64,11 +89,18 @@ def main():
     action.add_argument("--archive", type=Path, help="Create an upload ZIP outside the source folder.")
     parser.add_argument("--destination", type=Path)
     parser.add_argument("--source", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--agents-dir',type=Path,help='Register role assets from an already installed --source; no skill copy.')
+    parser.add_argument('--preview',action='store_true',help='Preview role registration without writing.')
     args = parser.parse_args()
     if args.archive and args.destination:
         parser.error("--destination is only used with --host.")
     try:
-        result = make_archive(args.source, args.archive) if args.archive else install(args.source, args.host, args.destination)
+        if args.agents_dir:
+            if not args.host or args.destination or args.archive:parser.error('--agents-dir requires --host and an already installed --source, without --destination/--archive')
+            result=register_agents(args.source,args.host,args.agents_dir,args.preview)
+        else:
+            if args.preview:parser.error('--preview applies to --agents-dir')
+            result = make_archive(args.source, args.archive) if args.archive else install(args.source, args.host, args.destination)
         print(json.dumps(result, indent=2))
         return 0
     except (OSError, ValueError) as error:

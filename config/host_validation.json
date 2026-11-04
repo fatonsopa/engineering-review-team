@@ -6,7 +6,7 @@
   ],
   "case_files": [
     {
-      "path": "evals/cases.json"
+      "path": "evals/review_v3_cases.json"
     }
   ]
 }

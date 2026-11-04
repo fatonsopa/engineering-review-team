@@ -174,6 +174,13 @@ def reuse(previous, fresh):
 
 
 def main():
+    import sys
+    if '--v4' in sys.argv:
+        from review_v3 import main as current_main
+        return current_main([x for x in sys.argv[1:] if x != '--v4'], version=4)
+    if '--v3' in sys.argv:
+        from review_v3 import main as v3_main
+        return v3_main([x for x in sys.argv[1:] if x != '--v3'])
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command',choices=['prepare','dispatch','collect','synthesize','revoke','reuse'])
     parser.add_argument('--state',required=True);parser.add_argument('--input');parser.add_argument('--previous')

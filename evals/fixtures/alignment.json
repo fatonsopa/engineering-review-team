@@ -1,0 +1,219 @@
+{
+  "description": "Authored isolated service/code review input, not real production evidence. Read only; do not execute targets.",
+  "files": {
+    "service.py": "def submit(session, tenant, items, now, store, bus):\n    if session is None:\n        return {\"status\": 401}\n    if session[\"tenant\"] != tenant or \"submit\" not in session[\"scopes\"]:\n        return {\"status\": 403}\n    if len(items) >= 100:\n        return {\"status\": 400}\n    job = store.create(tenant, items)\n    bus.publish({\"job\": job, \"tenant\": tenant})\n    return {\"status\": 202, \"tenant\": tenant, \"job\": job}\n",
+    "storage.py": "SCHEMA = \"\"\"\nCREATE TABLE jobs (\n  tenant TEXT NOT NULL,\n  request_key TEXT NOT NULL,\n  payload TEXT NOT NULL,\n  PRIMARY KEY (tenant, request_key)\n);\n\"\"\"\n\ndef create(conn, tenant, request_key, payload):\n    with conn:\n        conn.execute(\"INSERT INTO jobs VALUES (?, ?, ?)\",\n                     (tenant, request_key, payload))\n    return request_key\n",
+    "worker.py": "def deliver(job, remote):\n    while True:\n        try:\n            return remote.send(job, timeout=2)\n        except TimeoutError:\n            continue\n",
+    "test_service.py": "from service import submit\n\ndef test_tenant_response(fake_store, fake_bus):\n    session = {\"tenant\": \"0087\", \"scopes\": [\"submit\"], \"expires_at\": 5}\n    response = submit(session, \"0087\", [\"one\"], 1, fake_store, fake_bus)\n    assert response[\"tenant\"]\n"
+  },
+  "criteria": [
+    {
+      "id": "SEC-A",
+      "text": "A request may submit only to its authenticated tenant and with submit permission.",
+      "origin": "Owner-supplied accepted intent revision7",
+      "required_domains": [
+        "security"
+      ]
+    },
+    {
+      "id": "SEC-B",
+      "text": "A session with expires_at less than or equal to now must be rejected before any storage or publication.",
+      "origin": "Owner-supplied accepted intent revision7",
+      "required_domains": [
+        "security"
+      ]
+    },
+    {
+      "id": "ARC-1",
+      "text": "Every durably committed job must remain publishable after a process crash between database commit and message publication, including requests that lose their acknowledgment.",
+      "origin": "Owner-supplied accepted intent revision7",
+      "required_domains": [
+        "architecture"
+      ]
+    },
+    {
+      "id": "IMPL-1",
+      "text": "Batches of 1 through 100 items inclusive are accepted for valid sessions; larger batches are rejected.",
+      "origin": "Owner-supplied accepted intent revision7",
+      "required_domains": [
+        "implementation"
+      ]
+    },
+    {
+      "id": "DATA-1",
+      "text": "For the supplied SQLite schema, request_key uniqueness is scoped to tenant; independent tenants may reuse the same key.",
+      "origin": "Owner-supplied accepted intent revision7",
+      "required_domains": [
+        "data"
+      ]
+    },
+    {
+      "id": "TEST-1",
+      "text": "The tenant-response test must distinguish an incorrect returned tenant from the authenticated tenant, not merely a nonempty result.",
+      "origin": "Owner-supplied accepted intent revision7",
+      "required_domains": [
+        "testing"
+      ]
+    },
+    {
+      "id": "OPS-1",
+      "text": "One delivery invocation must stop after at most three timeout attempts and surface the failed outcome to its caller.",
+      "origin": "Owner-supplied accepted intent revision7",
+      "required_domains": [
+        "operations"
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "id": "INTENT",
+      "filename": "accepted-intent.md",
+      "content": "SEC-A: A request may submit only to its authenticated tenant and with submit permission.\nSEC-B: A session with expires_at less than or equal to now must be rejected before any storage or publication.\nARC-1: Every durably committed job must remain publishable after a process crash between database commit and message publication, including requests that lose their acknowledgment.\nIMPL-1: Batches of 1 through 100 items inclusive are accepted for valid sessions; larger batches are rejected.\nDATA-1: For the supplied SQLite schema, request_key uniqueness is scoped to tenant; independent tenants may reuse the same key.\nTEST-1: The tenant-response test must distinguish an incorrect returned tenant from the authenticated tenant, not merely a nonempty result.\nOPS-1: One delivery invocation must stop after at most three timeout attempts and surface the failed outcome to its caller.\n",
+      "origin": "Owner-supplied accepted intent",
+      "version": "7",
+      "status": "available",
+      "authority": "agreed",
+      "reason": "User identifies revision7 as current acceptance intent",
+      "sections": [
+        {
+          "id": "sec-a",
+          "start_line": 1,
+          "end_line": 1,
+          "criteria": [
+            "SEC-A"
+          ],
+          "domains": [
+            "security"
+          ]
+        },
+        {
+          "id": "sec-b",
+          "start_line": 2,
+          "end_line": 2,
+          "criteria": [
+            "SEC-B"
+          ],
+          "domains": [
+            "security"
+          ]
+        },
+        {
+          "id": "arc-1",
+          "start_line": 3,
+          "end_line": 3,
+          "criteria": [
+            "ARC-1"
+          ],
+          "domains": [
+            "architecture"
+          ]
+        },
+        {
+          "id": "impl-1",
+          "start_line": 4,
+          "end_line": 4,
+          "criteria": [
+            "IMPL-1"
+          ],
+          "domains": [
+            "implementation"
+          ]
+        },
+        {
+          "id": "data-1",
+          "start_line": 5,
+          "end_line": 5,
+          "criteria": [
+            "DATA-1"
+          ],
+          "domains": [
+            "data"
+          ]
+        },
+        {
+          "id": "test-1",
+          "start_line": 6,
+          "end_line": 6,
+          "criteria": [
+            "TEST-1"
+          ],
+          "domains": [
+            "testing"
+          ]
+        },
+        {
+          "id": "ops-1",
+          "start_line": 7,
+          "end_line": 7,
+          "criteria": [
+            "OPS-1"
+          ],
+          "domains": [
+            "operations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CAPACITY",
+      "filename": "capacity-proposal.md",
+      "content": "Proposed future target: 10000 jobs per minute; no approval or measurements supplied.\n",
+      "origin": "Exploratory design note",
+      "version": "draft1",
+      "status": "available",
+      "authority": "proposed",
+      "reason": "Proposal only; cannot establish a capacity violation",
+      "sections": [
+        {
+          "id": "capacity",
+          "start_line": 1,
+          "end_line": 1,
+          "criteria": [],
+          "domains": [
+            "architecture",
+            "operations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OLD",
+      "filename": "prior-design.md",
+      "content": "Old proposal assumed publication and commit were one synchronous operation. Current accepted intent is revision7.\n",
+      "origin": "Superseded design discussion",
+      "version": "2",
+      "status": "conflicting",
+      "authority": "superseded",
+      "reason": "Conflicts with current accepted durability intent; retained as context only",
+      "sections": [
+        {
+          "id": "publication",
+          "start_line": 1,
+          "end_line": 1,
+          "criteria": [],
+          "domains": [
+            "architecture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SOD",
+      "filename": null,
+      "content": null,
+      "origin": "No separate objectives document supplied",
+      "version": "unknown",
+      "status": "missing",
+      "authority": "unknown",
+      "reason": "Optional; use explicit OPS-1 criterion without inventing a target",
+      "sections": []
+    }
+  ],
+  "assumptions": [
+    "store.create in service.py is an abstract injected adapter that durably commits a job before returning; the supplied storage.py illustrates the separate request-key storage contract, not its call signature.",
+    "bus.publish is an external side effect; no outbox or recovery worker is supplied in this bounded source scope.",
+    "SQLite primary-key semantics apply to DATA-1; no production database or deployment is supplied.",
+    "expires_at and now use the same supplied integer time unit.",
+    "No raw test runs, production metrics or actual approval evidence beyond the owner-identified intent are supplied."
+  ]
+}

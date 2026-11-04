@@ -1,0 +1,11 @@
+{
+  "case_id": "domain-operations-defect",
+  "request": {
+    "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused operations review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+    "criteria": "A logical request may make at most three downstream attempts. Assess failure behavior; do not perform live load tests.",
+    "criteria_origin": "User-supplied task requirement",
+    "source": {
+      "module.py": "def fetch(call):\n    while True:\n        try: return call()\n        except TimeoutError: pass\n"
+    }
+  }
+}

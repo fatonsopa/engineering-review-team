@@ -1,0 +1,3365 @@
+[
+  {
+    "id": "scope-behavior",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "scope",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review to prepare the review profile, source/criteria evidence and applicability for this supplied small service. Criteria are supplied outside the target. Do not edit target files. State evidence limits. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria_origin": "User-supplied external criteria; preserve exact text.",
+      "execution_bounds": {
+        "max_calls": 4,
+        "max_seconds": 900,
+        "max_concurrent": 2
+      },
+      "fixture_preflight": "Stage declared UTF-8 inputs outside the candidate; prohibit grader files; capture target before/after hashes.",
+      "source": {
+        "requirements.txt": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary.\n",
+        "handler.py": "cache = {}\ndef read(tenant, item, store):\n    if item not in cache:\n        cache[item] = store[(tenant, item)]\n    return cache[item]\n",
+        "store.py": "items = {(\"A\", 1): \"A private\", (\"B\", 1): \"B private\"}\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/coordination.md"
+    ]
+  },
+  {
+    "id": "scope-boundary-authority",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "boundary",
+      "covers": [
+        "authority"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-boundary-authority"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "boundary",
+      "condition": "authority",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-boundary-external-inputs",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "boundary",
+      "covers": [
+        "external-inputs"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-boundary-external-inputs"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "boundary",
+      "condition": "external-inputs",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-boundary-unsupported",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "boundary",
+      "covers": [
+        "unsupported"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-boundary-unsupported"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "boundary",
+      "condition": "unsupported",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-branch-git-nongit",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "branch",
+      "covers": [
+        "git-nongit"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-branch-git-nongit"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "branch",
+      "condition": "git-nongit",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-branch-modes",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "branch",
+      "covers": [
+        "modes"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-branch-modes"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "branch",
+      "condition": "modes",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-omission-applicability",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "omission",
+      "covers": [
+        "applicability"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-omission-applicability"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "omission",
+      "condition": "applicability",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-omission-bind",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "omission",
+      "covers": [
+        "bind"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-omission-bind"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "omission",
+      "condition": "bind",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-omission-profile",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "omission",
+      "covers": [
+        "profile"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-omission-profile"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "omission",
+      "condition": "profile",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-order-bind-then-applicability",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "order",
+      "covers": [
+        "bind->applicability"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-order-bind-then-applicability"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "order",
+      "condition": "bind->applicability",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-order-profile-then-bind",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "order",
+      "covers": [
+        "profile->bind"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-order-profile-then-bind"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "order",
+      "condition": "profile->bind",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-recovery-recapture",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "scope",
+      "scenario": "recovery",
+      "covers": [
+        "recapture"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-recovery-recapture"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "recovery",
+      "condition": "recapture",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "scope-success",
+    "requirements": [
+      "ER-02",
+      "ER-03",
+      "ER-05",
+      "ER-08",
+      "ER-15",
+      "ER-17",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0,
+      "process": {
+        "order": [
+          "profile",
+          "bind",
+          "applicability"
+        ],
+        "visible": [],
+        "evidence": [
+          "profile",
+          "bind",
+          "applicability"
+        ]
+      }
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "scope",
+      "scenario": "success",
+      "covers": []
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "scope-success"
+    ],
+    "stdin": {
+      "workflow": "scope",
+      "scenario": "success",
+      "condition": "",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-behavior",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review to inspect the supplied tenant cache behavior. Select relevant specialist contexts when supported, respect the recorded host limits, and return bounded source-supported findings through the lead. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria_origin": "User-supplied external criteria; preserve exact text.",
+      "execution_bounds": {
+        "max_calls": 4,
+        "max_seconds": 900,
+        "max_concurrent": 2
+      },
+      "fixture_preflight": "Stage declared UTF-8 inputs outside the candidate; prohibit grader files; capture target before/after hashes.",
+      "source": {
+        "requirements.txt": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary.\n",
+        "handler.py": "cache = {}\ndef read(tenant, item, store):\n    if item not in cache:\n        cache[item] = store[(tenant, item)]\n    return cache[item]\n",
+        "store.py": "items = {(\"A\", 1): \"A private\", (\"B\", 1): \"B private\"}\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/coordination.md",
+      "references/domains/implementation.md",
+      "references/domains/security.md"
+    ]
+  },
+  {
+    "id": "review-boundary-budget",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "boundary",
+      "covers": [
+        "budget"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-boundary-budget"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "boundary",
+      "condition": "budget",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-boundary-composition",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "boundary",
+      "covers": [
+        "composition"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-boundary-composition"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "boundary",
+      "condition": "composition",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-boundary-independence",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "boundary",
+      "covers": [
+        "independence"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-boundary-independence"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "boundary",
+      "condition": "independence",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-boundary-subset",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "boundary",
+      "covers": [
+        "subset"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-boundary-subset"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "boundary",
+      "condition": "subset",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-branch-parent",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "branch",
+      "covers": [
+        "parent"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-branch-parent"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "branch",
+      "condition": "parent",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-branch-solo",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "branch",
+      "covers": [
+        "solo"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-branch-solo"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "branch",
+      "condition": "solo",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-branch-specialist",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "branch",
+      "covers": [
+        "specialist"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-branch-specialist"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "branch",
+      "condition": "specialist",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-omission-assign",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "omission",
+      "covers": [
+        "assign"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-omission-assign"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "omission",
+      "condition": "assign",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-omission-collect",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "omission",
+      "covers": [
+        "collect"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-omission-collect"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "omission",
+      "condition": "collect",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-omission-dispatch",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "omission",
+      "covers": [
+        "dispatch"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-omission-dispatch"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "omission",
+      "condition": "dispatch",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-omission-inspect",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "omission",
+      "covers": [
+        "inspect"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-omission-inspect"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "omission",
+      "condition": "inspect",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-order-assign-then-dispatch",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "order",
+      "covers": [
+        "assign->dispatch"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-order-assign-then-dispatch"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "order",
+      "condition": "assign->dispatch",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-order-dispatch-then-inspect",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "order",
+      "covers": [
+        "dispatch->inspect"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-order-dispatch-then-inspect"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "order",
+      "condition": "dispatch->inspect",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-order-inspect-then-collect",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "order",
+      "covers": [
+        "inspect->collect"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-order-inspect-then-collect"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "order",
+      "condition": "inspect->collect",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-recovery-failed-worker",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "recovery",
+      "covers": [
+        "failed-worker"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-recovery-failed-worker"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "recovery",
+      "condition": "failed-worker",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-recovery-missing-input",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "review",
+      "scenario": "recovery",
+      "covers": [
+        "missing-input"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-recovery-missing-input"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "recovery",
+      "condition": "missing-input",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "review-success",
+    "requirements": [
+      "ER-01",
+      "ER-09",
+      "ER-10",
+      "ER-11",
+      "ER-13",
+      "ER-14",
+      "ER-20"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0,
+      "process": {
+        "order": [
+          "assign",
+          "dispatch",
+          "inspect",
+          "collect"
+        ],
+        "visible": [],
+        "evidence": [
+          "assign",
+          "dispatch",
+          "inspect",
+          "collect"
+        ]
+      }
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "success",
+      "covers": []
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "review-success"
+    ],
+    "stdin": {
+      "workflow": "review",
+      "scenario": "success",
+      "condition": "",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-behavior",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review to produce one consolidated assessment of the supplied tenant cache. Investigate any differing specialist conclusions using the actual sources, retain relevant evidence and disclose incomplete work. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria_origin": "User-supplied external criteria; preserve exact text.",
+      "execution_bounds": {
+        "max_calls": 4,
+        "max_seconds": 900,
+        "max_concurrent": 2
+      },
+      "fixture_preflight": "Stage declared UTF-8 inputs outside the candidate; prohibit grader files; capture target before/after hashes.",
+      "source": {
+        "requirements.txt": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary.\n",
+        "handler.py": "cache = {}\ndef read(tenant, item, store):\n    if item not in cache:\n        cache[item] = store[(tenant, item)]\n    return cache[item]\n",
+        "store.py": "items = {(\"A\", 1): \"A private\", (\"B\", 1): \"B private\"}\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/coordination.md"
+    ]
+  },
+  {
+    "id": "reconcile-boundary-finding-basis",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "boundary",
+      "covers": [
+        "finding-basis"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-boundary-finding-basis"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "boundary",
+      "condition": "finding-basis",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-boundary-missing-coverage",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "boundary",
+      "covers": [
+        "missing-coverage"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-boundary-missing-coverage"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "boundary",
+      "condition": "missing-coverage",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-boundary-serious-finding",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "boundary",
+      "covers": [
+        "serious-finding"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-boundary-serious-finding"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "boundary",
+      "condition": "serious-finding",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-branch-clean",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "branch",
+      "covers": [
+        "clean"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-branch-clean"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "branch",
+      "condition": "clean",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-branch-improvements",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "branch",
+      "covers": [
+        "improvements"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-branch-improvements"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "branch",
+      "condition": "improvements",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-branch-incomplete",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "branch",
+      "covers": [
+        "incomplete"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-branch-incomplete"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "branch",
+      "condition": "incomplete",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-omission-conflicts",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "omission",
+      "covers": [
+        "conflicts"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-omission-conflicts"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "omission",
+      "condition": "conflicts",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-omission-deliver",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "omission",
+      "covers": [
+        "deliver"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-omission-deliver"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "omission",
+      "condition": "deliver",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-omission-dispositions",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "omission",
+      "covers": [
+        "dispositions"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-omission-dispositions"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "omission",
+      "condition": "dispositions",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-omission-validate",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "omission",
+      "covers": [
+        "validate"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-omission-validate"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "omission",
+      "condition": "validate",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-order-conflicts-then-validate",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "order",
+      "covers": [
+        "conflicts->validate"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-order-conflicts-then-validate"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "order",
+      "condition": "conflicts->validate",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-order-dispositions-then-conflicts",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "order",
+      "covers": [
+        "dispositions->conflicts"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-order-dispositions-then-conflicts"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "order",
+      "condition": "dispositions->conflicts",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-order-validate-then-deliver",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "order",
+      "covers": [
+        "validate->deliver"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-order-validate-then-deliver"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "order",
+      "condition": "validate->deliver",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-recovery-followup",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "recovery",
+      "covers": [
+        "followup"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-recovery-followup"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "recovery",
+      "condition": "followup",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "reconcile-success",
+    "requirements": [
+      "ER-03",
+      "ER-07",
+      "ER-12",
+      "ER-15",
+      "ER-21"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0,
+      "process": {
+        "order": [
+          "dispositions",
+          "conflicts",
+          "validate",
+          "deliver"
+        ],
+        "visible": [],
+        "evidence": [
+          "dispositions",
+          "conflicts",
+          "validate",
+          "deliver"
+        ]
+      }
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "reconcile",
+      "scenario": "success",
+      "covers": []
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "reconcile-success"
+    ],
+    "stdin": {
+      "workflow": "reconcile",
+      "scenario": "success",
+      "condition": "",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-behavior",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "recover",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke Engineering Review to review the supplied target. Record an implementation task, then use an explicitly supplied simulated timeout record with provenance labelled evaluation fixture. Record it after revocation, report incomplete coverage, and demonstrate no stale acceptance. Do not claim a real worker timed out. Do not mutate input/.",
+      "criteria_origin": "User-supplied external criteria; preserve exact text.",
+      "execution_bounds": {
+        "max_calls": 4,
+        "max_seconds": 900,
+        "max_concurrent": 2
+      },
+      "fixture_preflight": "Stage declared UTF-8 inputs outside the candidate; prohibit grader files; capture target before/after hashes.",
+      "source": {
+        "requirements.txt": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary.\n",
+        "handler.py": "cache = {}\ndef read(tenant, item, store):\n    if item not in cache:\n        cache[item] = store[(tenant, item)]\n    return cache[item]\n",
+        "store.py": "items = {(\"A\", 1): \"A private\", (\"B\", 1): \"B private\"}\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/coordination.md"
+    ]
+  },
+  {
+    "id": "recover-boundary-drift",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "boundary",
+      "covers": [
+        "drift"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-boundary-drift"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "boundary",
+      "condition": "drift",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-boundary-duplicate",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "boundary",
+      "covers": [
+        "duplicate"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-boundary-duplicate"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "boundary",
+      "condition": "duplicate",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-boundary-revocation",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "boundary",
+      "covers": [
+        "revocation"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-boundary-revocation"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "boundary",
+      "condition": "revocation",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-branch-followup",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "branch",
+      "covers": [
+        "followup"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-branch-followup"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "branch",
+      "condition": "followup",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-branch-retry",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "branch",
+      "covers": [
+        "retry"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-branch-retry"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "branch",
+      "condition": "retry",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-branch-reuse",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "branch",
+      "covers": [
+        "reuse"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-branch-reuse"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "branch",
+      "condition": "reuse",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-omission-classify",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "omission",
+      "covers": [
+        "classify"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-omission-classify"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "omission",
+      "condition": "classify",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-omission-reconcile",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "omission",
+      "covers": [
+        "reconcile"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-omission-reconcile"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "omission",
+      "condition": "reconcile",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-omission-record",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "omission",
+      "covers": [
+        "record"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-omission-record"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "omission",
+      "condition": "record",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-order-classify-then-reconcile",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "order",
+      "covers": [
+        "classify->reconcile"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-order-classify-then-reconcile"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "order",
+      "condition": "classify->reconcile",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-order-record-then-classify",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "order",
+      "covers": [
+        "record->classify"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-order-record-then-classify"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "order",
+      "condition": "record->classify",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-recovery-late-return",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "recover",
+      "scenario": "recovery",
+      "covers": [
+        "late-return"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-recovery-late-return"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "recovery",
+      "condition": "late-return",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "recover-success",
+    "requirements": [
+      "ER-06",
+      "ER-07",
+      "ER-08",
+      "ER-16",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0,
+      "process": {
+        "order": [
+          "record",
+          "classify",
+          "reconcile"
+        ],
+        "visible": [],
+        "evidence": [
+          "record",
+          "classify",
+          "reconcile"
+        ]
+      }
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "recover",
+      "scenario": "success",
+      "covers": []
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "recover-success"
+    ],
+    "stdin": {
+      "workflow": "recover",
+      "scenario": "success",
+      "condition": "",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-behavior",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "verify",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). In a disposable workspace, explicitly load the provided Engineering Review candidate and perform one multi-domain review of the supplied service. Record actual role loading, allowed tools, task outcomes, final ownership and target preservation. Report unavailable host capability accurately. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits. Launch at least implementation and security reviewers through actual native host agent tools; record and return their findings to the lead. If host capability is denied, keep incomplete coverage; never fabricate a worker trace.",
+      "criteria_origin": "User-supplied external criteria; preserve exact text.",
+      "execution_bounds": {
+        "max_calls": 4,
+        "max_seconds": 900,
+        "max_concurrent": 2
+      },
+      "fixture_preflight": "Stage declared UTF-8 inputs outside the candidate; prohibit grader files; capture target before/after hashes.",
+      "source": {
+        "requirements.txt": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary.\n",
+        "handler.py": "cache = {}\ndef read(tenant, item, store):\n    if item not in cache:\n        cache[item] = store[(tenant, item)]\n    return cache[item]\n",
+        "store.py": "items = {(\"A\", 1): \"A private\", (\"B\", 1): \"B private\"}\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/coordination.md"
+    ]
+  },
+  {
+    "id": "verify-boundary-fixtures",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "boundary",
+      "covers": [
+        "fixtures"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-boundary-fixtures"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "boundary",
+      "condition": "fixtures",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-boundary-history",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "boundary",
+      "covers": [
+        "history"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-boundary-history"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "boundary",
+      "condition": "history",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-boundary-identity",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "boundary",
+      "covers": [
+        "identity"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-boundary-identity"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "boundary",
+      "condition": "identity",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-boundary-registry",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "boundary",
+      "covers": [
+        "registry"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-boundary-registry"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "boundary",
+      "condition": "registry",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-branch-host-unavailable",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "branch",
+      "covers": [
+        "host-unavailable"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-branch-host-unavailable"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "branch",
+      "condition": "host-unavailable",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-branch-transfer",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "branch",
+      "covers": [
+        "transfer"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-branch-transfer"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "branch",
+      "condition": "transfer",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-omission-assess",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "omission",
+      "covers": [
+        "assess"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-omission-assess"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "omission",
+      "condition": "assess",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-omission-freeze",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "omission",
+      "covers": [
+        "freeze"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-omission-freeze"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "omission",
+      "condition": "freeze",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-omission-pilot",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "omission",
+      "covers": [
+        "pilot"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-omission-pilot"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "omission",
+      "condition": "pilot",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-omission-preflight",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "omission",
+      "covers": [
+        "preflight"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-omission-preflight"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "omission",
+      "condition": "preflight",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-order-freeze-then-pilot",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "order",
+      "covers": [
+        "freeze->pilot"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-order-freeze-then-pilot"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "order",
+      "condition": "freeze->pilot",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-order-pilot-then-assess",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "order",
+      "covers": [
+        "pilot->assess"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-order-pilot-then-assess"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "order",
+      "condition": "pilot->assess",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-order-preflight-then-freeze",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "order",
+      "covers": [
+        "preflight->freeze"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-order-preflight-then-freeze"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "order",
+      "condition": "preflight->freeze",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-recovery-bounded-retry",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": false,
+    "workflow": {
+      "id": "verify",
+      "scenario": "recovery",
+      "covers": [
+        "bounded-retry"
+      ]
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-recovery-bounded-retry"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "recovery",
+      "condition": "bounded-retry",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "verify-success",
+    "requirements": [
+      "ER-04",
+      "ER-11",
+      "ER-18",
+      "ER-19",
+      "ER-22",
+      "ER-23"
+    ],
+    "critical": true,
+    "kind": "command",
+    "expect": {
+      "exit_code": 0,
+      "process": {
+        "order": [
+          "preflight",
+          "freeze",
+          "pilot",
+          "assess"
+        ],
+        "visible": [],
+        "evidence": [
+          "preflight",
+          "freeze",
+          "pilot",
+          "assess"
+        ]
+      }
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "verify",
+      "scenario": "success",
+      "covers": []
+    },
+    "command": [
+      "{python}",
+      "scripts/check_review_v3.py",
+      "--case",
+      "verify-success"
+    ],
+    "stdin": {
+      "workflow": "verify",
+      "scenario": "success",
+      "condition": "",
+      "fixture": "Disposable source/evidence/ledger objects; target programs are never executed by these controls."
+    },
+    "timeout_seconds": 30
+  },
+  {
+    "id": "domain-implementation-defect",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused implementation review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "Clamp integers to the inclusive interval 0 through 10.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def clamp(x):\n    return min(10, max(1, x))\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/implementation.md"
+    ]
+  },
+  {
+    "id": "domain-implementation-clean",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused implementation review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "Clamp integers to the inclusive interval 0 through 10.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def clamp(x):\n    return min(10, max(0, x))\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/implementation.md"
+    ]
+  },
+  {
+    "id": "domain-security-defect",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused security review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary.\n",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "cache = {}\ndef read(tenant, item, store):\n    if item not in cache:\n        cache[item] = store[(tenant, item)]\n    return cache[item]\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/security.md"
+    ]
+  },
+  {
+    "id": "domain-security-clean",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused security review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary.\n",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "cache = {}\ndef read(tenant, item, store):\n    key = (tenant, item)\n    if key not in cache:\n        cache[key] = store[key]\n    return cache[key]\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/security.md"
+    ]
+  },
+  {
+    "id": "domain-data-defect",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused data review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "The database already contains orders. Every existing order must acquire pending status. Review migration compatibility without executing SQL. This fixture uses PostgreSQL 16; orders contains existing rows and there are no preexisting status values or incompatible callers.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.sql": "ALTER TABLE orders ADD COLUMN status TEXT NOT NULL;\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/data.md"
+    ]
+  },
+  {
+    "id": "domain-data-clean",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused data review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "The database already contains orders. Every existing order must acquire pending status. Review migration compatibility without executing SQL. This fixture uses PostgreSQL 16; orders contains existing rows and there are no preexisting status values or incompatible callers.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.sql": "ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT 'pending';\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/data.md"
+    ]
+  },
+  {
+    "id": "domain-testing-defect",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused testing review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "total must return the arithmetic sum. Assess whether the shown test distinguishes an incorrect constant-zero implementation.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def test_total():\n    assert total([1, 2]) == total([1, 2])\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/testing.md"
+    ]
+  },
+  {
+    "id": "domain-testing-clean",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused testing review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "total must return the arithmetic sum. Assess whether the shown test distinguishes an incorrect constant-zero implementation.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def test_total():\n    assert total([1, 2]) == 3\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/testing.md"
+    ]
+  },
+  {
+    "id": "domain-operations-defect",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused operations review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "A logical request may make at most three downstream attempts. Assess failure behavior; do not perform live load tests.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def fetch(call):\n    while True:\n        try: return call()\n        except TimeoutError: pass\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/operations.md"
+    ]
+  },
+  {
+    "id": "domain-operations-clean",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused operations review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "A logical request may make at most three downstream attempts. Assess failure behavior; do not perform live load tests.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def fetch(call):\n    for attempt in range(3):\n        try: return call()\n        except TimeoutError:\n            if attempt == 2: raise\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/operations.md"
+    ]
+  },
+  {
+    "id": "domain-architecture-defect",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused architecture review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "Web and batch consumers must use the same 10 percent surcharge rule. Assess rule ownership and cross-component contract consistency; avoid unrelated redesign.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def web_total(items):\n    return sum(items) * 1.1\ndef job_total(items):\n    return sum(items) * 1.2\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/architecture.md"
+    ]
+  },
+  {
+    "id": "domain-architecture-clean",
+    "requirements": [
+      "ER-01",
+      "ER-04",
+      "ER-12",
+      "ER-15",
+      "ER-19"
+    ],
+    "critical": true,
+    "kind": "behavior",
+    "expect": {
+      "exit_code": 0
+    },
+    "semantic": true,
+    "workflow": {
+      "id": "review",
+      "scenario": "behavior",
+      "covers": []
+    },
+    "request": {
+      "instruction": "Explicitly invoke $engineering-review (or /engineering-review on Claude Code). Use Engineering Review for a focused architecture review of the supplied files against the requirement. Return only supported findings and relevant limits; do not modify or execute the target. Use the installed skill and its scripts; keep evidence outside input/. Produce a final source-grounded report and retain actual public tool traces. No external messages or target edits.",
+      "criteria": "Web and batch consumers must use the same 10 percent surcharge rule. Assess rule ownership and cross-component contract consistency; avoid unrelated redesign.",
+      "criteria_origin": "User-supplied task requirement",
+      "source": {
+        "module.py": "def total(items):\n    return sum(items) * 1.1\ndef web_total(items): return total(items)\ndef job_total(items): return total(items)\n"
+      }
+    },
+    "resources": [
+      "SKILL.md",
+      "references/review_policy.md",
+      "references/review_standard.md",
+      "references/domains/architecture.md"
+    ]
+  }
+]

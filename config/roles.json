@@ -1,36 +1,216 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "lead": "Engineering Review Lead",
+  "lead_contract": {
+    "role": "lead",
+    "owns_final_response": true,
+    "delegates": true,
+    "routes": [
+      "direct",
+      "parent"
+    ],
+    "inputs": [
+      "profile",
+      "criteria",
+      "source manifest",
+      "coverage",
+      "bounds"
+    ],
+    "outputs": [
+      "consolidated assessment"
+    ],
+    "authority": [
+      "read target",
+      "write external evidence",
+      "already-authorized bounded checks"
+    ]
+  },
   "specialists": {
     "implementation": {
       "reference": "references/domains/implementation.md",
       "claude": "assets/claude/engineering-review-implementation.md",
-      "codex": "assets/codex/engineering-review-implementation.toml"
+      "codex": "assets/codex/engineering-review-implementation.toml",
+      "name": "Implementation Reviewer",
+      "eligibility": "Observable behavior, requirements, interfaces, state transitions or resource lifetime.",
+      "inputs": [
+        "bound task",
+        "assigned source subset",
+        "applicable criteria",
+        "shared rules"
+      ],
+      "outputs": [
+        "v2 source report",
+        "inspection",
+        "limitations"
+      ],
+      "recipient": "lead",
+      "owns_final_response": false,
+      "delegates": false,
+      "tools": [
+        "read",
+        "glob",
+        "grep"
+      ],
+      "routes": [
+        "direct",
+        "parent"
+      ],
+      "recovery": "Return missing dependencies or incomplete outcomes through lead; do not widen scope."
     },
     "architecture": {
       "reference": "references/domains/architecture.md",
       "claude": "assets/claude/engineering-review-architecture.md",
-      "codex": "assets/codex/engineering-review-architecture.toml"
+      "codex": "assets/codex/engineering-review-architecture.toml",
+      "name": "Architecture Reviewer",
+      "eligibility": "Component boundaries, rule ownership, dependencies, contracts, compatibility or quality-attribute risks.",
+      "inputs": [
+        "bound task",
+        "assigned source subset",
+        "applicable criteria",
+        "shared rules"
+      ],
+      "outputs": [
+        "v2 source report",
+        "inspection",
+        "limitations"
+      ],
+      "recipient": "lead",
+      "owns_final_response": false,
+      "delegates": false,
+      "tools": [
+        "read",
+        "glob",
+        "grep"
+      ],
+      "routes": [
+        "direct",
+        "parent"
+      ],
+      "recovery": "Return missing dependencies or incomplete outcomes through lead; do not widen scope."
     },
     "security": {
       "reference": "references/domains/security.md",
       "claude": "assets/claude/engineering-review-security.md",
-      "codex": "assets/codex/engineering-review-security.toml"
+      "codex": "assets/codex/engineering-review-security.toml",
+      "name": "Security Reviewer",
+      "eligibility": "Trust boundaries, identity, authorization, secrets, untrusted input, dependency or sensitive-output risks.",
+      "inputs": [
+        "bound task",
+        "assigned source subset",
+        "applicable criteria",
+        "shared rules"
+      ],
+      "outputs": [
+        "v2 source report",
+        "inspection",
+        "limitations"
+      ],
+      "recipient": "lead",
+      "owns_final_response": false,
+      "delegates": false,
+      "tools": [
+        "read",
+        "glob",
+        "grep"
+      ],
+      "routes": [
+        "direct",
+        "parent"
+      ],
+      "recovery": "Return missing dependencies or incomplete outcomes through lead; do not widen scope."
     },
     "data": {
       "reference": "references/domains/data.md",
       "claude": "assets/claude/engineering-review-data.md",
-      "codex": "assets/codex/engineering-review-data.toml"
+      "codex": "assets/codex/engineering-review-data.toml",
+      "name": "Data Reviewer",
+      "eligibility": "Schemas, persistence, queries, migrations, transactions, isolation, retention or recovery.",
+      "inputs": [
+        "bound task",
+        "assigned source subset",
+        "applicable criteria",
+        "shared rules"
+      ],
+      "outputs": [
+        "v2 source report",
+        "inspection",
+        "limitations"
+      ],
+      "recipient": "lead",
+      "owns_final_response": false,
+      "delegates": false,
+      "tools": [
+        "read",
+        "glob",
+        "grep"
+      ],
+      "routes": [
+        "direct",
+        "parent"
+      ],
+      "recovery": "Return missing dependencies or incomplete outcomes through lead; do not widen scope."
     },
     "testing": {
       "reference": "references/domains/testing.md",
       "claude": "assets/claude/engineering-review-testing.md",
-      "codex": "assets/codex/engineering-review-testing.toml"
+      "codex": "assets/codex/engineering-review-testing.toml",
+      "name": "Test Reviewer",
+      "eligibility": "Coverage claims, test oracles, fixtures, isolation, mocks, concurrency or regression evidence.",
+      "inputs": [
+        "bound task",
+        "assigned source subset",
+        "applicable criteria",
+        "shared rules"
+      ],
+      "outputs": [
+        "v2 source report",
+        "inspection",
+        "limitations"
+      ],
+      "recipient": "lead",
+      "owns_final_response": false,
+      "delegates": false,
+      "tools": [
+        "read",
+        "glob",
+        "grep"
+      ],
+      "routes": [
+        "direct",
+        "parent"
+      ],
+      "recovery": "Return missing dependencies or incomplete outcomes through lead; do not widen scope."
     },
     "operations": {
       "reference": "references/domains/operations.md",
       "claude": "assets/claude/engineering-review-operations.md",
-      "codex": "assets/codex/engineering-review-operations.toml"
+      "codex": "assets/codex/engineering-review-operations.toml",
+      "name": "Operations Reviewer",
+      "eligibility": "Deployment, configuration, reliability, recovery, observability, resource lifetime or performance.",
+      "inputs": [
+        "bound task",
+        "assigned source subset",
+        "applicable criteria",
+        "shared rules"
+      ],
+      "outputs": [
+        "v2 source report",
+        "inspection",
+        "limitations"
+      ],
+      "recipient": "lead",
+      "owns_final_response": false,
+      "delegates": false,
+      "tools": [
+        "read",
+        "glob",
+        "grep"
+      ],
+      "routes": [
+        "direct",
+        "parent"
+      ],
+      "recovery": "Return missing dependencies or incomplete outcomes through lead; do not widen scope."
     }
   }
 }
