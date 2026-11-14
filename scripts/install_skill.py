@@ -96,13 +96,24 @@ def register_agents(source, host, destination, preview=False):
     if target == source or source in target.parents or target in source.parents:
         raise ValueError("Agent destination and source must not overlap.")
     planned = []
+    codex_configuration = []
     for asset in assets:
         if asset.is_symlink() or not asset.is_file():
             raise ValueError(f"Native asset must be a regular file: {asset}")
         text = asset.read_text(encoding="utf-8").replace("{{SKILL_ROOT}}", str(source))
         if host == "codex":
             import tomllib
-            tomllib.loads(text)
+            metadata = tomllib.loads(text)
+            if metadata.get("name") != asset.stem or not all(
+                isinstance(metadata.get(key), str) and metadata[key].strip()
+                for key in ("description", "developer_instructions")
+            ):
+                raise ValueError(f"Native agent metadata is incomplete: {asset}")
+            codex_configuration.append(
+                f"[agents.{asset.stem}]\n"
+                f"description = {json.dumps(metadata['description'], ensure_ascii=False)}\n"
+                f"config_file = {json.dumps(str(target / asset.name), ensure_ascii=False)}\n"
+            )
         output = checked_path(target / asset.name)
         if output.exists() and (not output.is_file() or output.read_bytes() != text.encode("utf-8")):
             raise ValueError(f"Refusing to replace customized native agent: {output}")
@@ -114,6 +125,7 @@ def register_agents(source, host, destination, preview=False):
                 with output.open("x", encoding="utf-8", newline="") as stream:
                     stream.write(text)
     return {"source": str(source), "agents_dir": str(target), "preview": preview,
+            **({"codex_configuration": "\n".join(codex_configuration)} if host == "codex" else {}),
             "agents": [{"path": str(path), "status": "unchanged" if exists else "planned" if preview else "created"}
                        for path, _, exists in planned]}
 

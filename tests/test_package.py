@@ -32,7 +32,7 @@ class InstallerTests(unittest.TestCase):
         for role in ("lead", "implementation"):
             name = f"engineering-review-{role}"
             (self.source / f"assets/codex/{name}.toml").write_text(
-                f'name = "{name}"\ndeveloper_instructions = "Read {{{{SKILL_ROOT}}}}/references/policy.md"\n')
+                f'name = "{name}"\ndescription = "Authored native review fixture"\ndeveloper_instructions = "Read {{{{SKILL_ROOT}}}}/references/policy.md"\n')
             (self.source / f"assets/claude/{name}.md").write_text(
                 f"---\nname: {name}\ntools: Read, Glob, Grep\n---\nRead {{{{SKILL_ROOT}}}}/references/policy.md\n")
 
@@ -55,6 +55,11 @@ class InstallerTests(unittest.TestCase):
             target = self.base / host
             result = installer.register_agents(self.source, host, target, preview=True)
             self.assertEqual(len(result["agents"]), 2)
+            if host == "codex":
+                bindings = tomllib.loads(result["codex_configuration"])["agents"]
+                for name, binding in bindings.items():
+                    self.assertEqual(binding["config_file"], str(target / (name + suffix)))
+                    self.assertEqual(binding["description"], "Authored native review fixture")
             self.assertFalse(target.exists())
             installer.register_agents(self.source, host, target)
             paths = sorted(target.glob("*"))
@@ -74,6 +79,14 @@ class InstallerTests(unittest.TestCase):
             installer.register_agents(self.source, "codex", target)
         self.assertEqual([p.name for p in target.iterdir()], [conflict.name])
         self.assertEqual(conflict.read_text(), "custom")
+
+    def test_incomplete_codex_metadata_is_rejected_before_registration(self):
+        asset = self.source / "assets/codex/engineering-review-lead.toml"
+        asset.write_text('name = "engineering-review-lead"\ndeveloper_instructions = "Read sources"\n')
+        target = self.base / "agents"
+        with self.assertRaisesRegex(ValueError, "metadata is incomplete"):
+            installer.register_agents(self.source, "codex", target)
+        self.assertFalse(target.exists())
 
     def test_symlinks_refused(self):
         alias = self.base / "alias"
@@ -124,6 +137,10 @@ class PackageTests(unittest.TestCase):
             self.assertTrue(fields["description"])
             self.assertEqual(fields["tools"], "Read, Glob, Grep")
             self.assertTrue(parts[2].strip())
+            heading, _, instructions = parts[2].strip().partition("\n")
+            self.assertTrue(heading.startswith("# "))
+            counterpart = tomllib.loads((ROOT / "assets/codex" / (path.stem + ".toml")).read_text())
+            self.assertEqual(instructions.strip(), counterpart["developer_instructions"].strip())
 
     def test_local_links_and_native_resource_paths(self):
         files = list(ROOT.glob("*.md")) + list((ROOT / "references").rglob("*.md"))
