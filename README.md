@@ -66,7 +66,7 @@ See [AGENTS.md](AGENTS.md). Run `python3 -B -m unittest discover -s tests -p tes
 
 ### Behavioral regression trials
 
-[The retained cases](tests/review_cases.json) cover ten reviewers with two scenarios each. Run the three preparation checks with `python3 -B -m unittest discover -s tests -p test_review_cases.py -v`, then prepare a disposable workspace from the repository root:
+[The retained cases](tests/review_cases.json) cover ten reviewers with two scenarios each. Run the preparation checks with `python3 -B -m unittest discover -s tests -p test_review_cases.py -v`, then prepare a disposable workspace from the repository root:
 
 ```sh
 python3 -B tests/test_review_cases.py --prepare code --destination /absolute/disposable/code --host claude-code
@@ -74,7 +74,9 @@ cd /absolute/disposable/code
 claude -p --agent engineering-review-implementation --permission-mode dontAsk --tools Read,Glob,Grep --allowedTools Read,Glob,Grep < prompt.txt
 ```
 
-The expected checklist is for the maintainer and is not staged. Assess the actual output against it and verify source preservation; preparation and unit checks are not behavioral passes. For Codex, use `--host codex` with the same [preparation module](tests/test_review_cases.py), then dispatch the prepared native reviewer from the main context.
+The expected checklist is for the maintainer and is not staged. Assess the actual output against it and verify source preservation; preparation and unit checks are not behavioral passes. For Codex, use `--host codex` with the same [preparation module](tests/test_review_cases.py), follow the [native binding guidance](references/host_setup.md#register-optional-agents), then dispatch the prepared native reviewer from the main context.
+
+Use `--prepare lifecycle` to stage the initial shared-workflow fixture. Keep the expected checklist in [tests/lifecycle_case.json](tests/lifecycle_case.json) outside the model workspace. After the initial review, apply only its `follow_up_files` and provide the developer response using the actual initial finding identifiers, then request re-review in the same host conversation. Assess each stage against the maintainer checklist. These bounded cases and host profiles do not certify every technical control or every host configuration.
 
 ## License
 
