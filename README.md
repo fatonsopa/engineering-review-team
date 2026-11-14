@@ -1,159 +1,69 @@
-# Engineering Review
+# Engineering Review Team
 
-One Engineering Review skill with an accountable lead and six conditional specialists. Version 4 adds optional authority-aware project-document routing and exact criterion/domain coverage to the preserved source/evidence and outcome ledger.
+**Engineering Review Team** — A coordinated team of AI reviewers led by an Engineering Review Lead, with specialists in code, architecture, security, database, testing, DevOps, performance, design, localization, and compliance. Delivered as an agent skill package for Codex and Claude Code.
 
-## Requirements
+Review changes or components through ordinary host-native tools. The lead reviews directly or selects specialists, then returns evidence-backed findings and honest limits. The package supplies technical knowledge and instructions; it does not require a review engine, ledger or evaluation matrix.
 
-- Python 3.11+ standard library; Unix-like file locking for coordination.
-- Explicit source files, criteria and actual implementer/reviewer identities.
-- Host-native file access; no application credentials or another provider CLI required for normal use.
+## Start
 
-## Installation
+Use the skill in your current host and name the target, expected behavior and review scope. Supply relevant requirements or project guidance when available. Review is read-only; corrections and publication need their own authority. See [SKILL.md](SKILL.md) for the workflow.
 
-### Get the skill
+## Install
 
-Download and extract the skill ZIP. Open the folder containing `SKILL.md`.
-
-### ChatGPT desktop and Codex
-
-For a filesystem-enabled ChatGPT desktop/Codex workspace, run:
+Python 3.11+ is needed only for the standalone installer:
 
 ```sh
-python3 scripts/install_skill.py --host codex
+python3 scripts/install_skill.py --host codex --destination /absolute/path/to/engineering-review
 ```
 
-The installer copies the repository files to `~/.agents/skills/engineering-review/`. Start a new chat and select `@engineering-review` in ChatGPT desktop or invoke `$engineering-review` in Codex. In the desktop app, Skills is available from the sidebar. This installation uses local skill support; it does not install a browser or mobile add-on.
+Use `--host claude-code` for Claude Code. To register optional native roles, run the installed installer with `--source /absolute/path/to/engineering-review --agents-dir /path/to/project/.codex/agents --host codex --preview`; Claude Code uses `.claude/agents` and `--host claude-code`. Remove `--preview` to write after checking the destination. See [host setup](references/host_setup.md) for conflicts, permissions and archive creation. Asset files do not prove actual host execution.
 
-### Claude Code
+## Reviewers and shared guidance
 
-```sh
-python3 scripts/install_skill.py --host claude-code
-```
+Every role uses the [shared policy](references/review_policy.md), [evidence and finding standard](references/review_standard.md), and relevant [project intent](references/intent_context.md). The lead also uses [coordination](references/coordination.md) and [project context](references/project_profile.md). Read only the selected role and applicable technical controls; research references are for source verification, not mandatory preload.
 
-The destination is `~/.claude/skills/engineering-review/`. Start a new Claude Code session and invoke `/engineering-review`.
+| Reviewer | Responsibilities | Policy (POL) | Technical Standard (STD) |
+| --- | --- | --- | --- |
+| [Engineering Review Lead](references/coordination.md) | Establish scope and authority, inspect evidence, assign selected specialists, check coverage, reconcile findings and deliver the final assessment. A nested read-only lead requests parent assistance when needed. | [Shared Policy (POL)](references/review_policy.md) | [Shared Technical Standard (STD)](references/review_standard.md) |
+| [Code Reviewer](references/domains/code.md) | Functional correctness, requirement alignment, contracts, state transitions, errors, concurrency, resource ownership, compatibility or concrete maintainability risks. | [Code Reviewer Policy (POL)](references/policies/code.md) | [Code Reviewer Technical Standard (STD)](references/standards/code.md) |
+| [Architecture Reviewer](references/domains/architecture.md) | Component boundaries, rule ownership, dependencies, contracts, compatibility or quality-attribute risks. | [Architecture Reviewer Policy (POL)](references/policies/architecture.md) | [Architecture Reviewer Technical Standard (STD)](references/standards/architecture.md) |
+| [Security Reviewer](references/domains/security.md) | Trust boundaries, identity, authorization, secrets, untrusted input, dependency or sensitive-output risks. | [Security Reviewer Policy (POL)](references/policies/security.md) | [Security Reviewer Technical Standard (STD)](references/standards/security.md) |
+| [Database Reviewer](references/domains/database.md) | Persistence contracts, schemas, database access, queries, transactions, migrations, retention, maintenance, replication or recovery. | [Database Reviewer Policy (POL)](references/policies/database.md) | [Database Reviewer Technical Standard (STD)](references/standards/database.md) |
+| [Testing Reviewer](references/domains/testing.md) | Requirement and risk coverage, test oracles, fixtures and doubles, isolation, concurrency, compatibility, regression quality or execution evidence. | [Testing Reviewer Policy (POL)](references/policies/testing.md) | [Testing Reviewer Technical Standard (STD)](references/standards/testing.md) |
+| [DevOps Reviewer](references/domains/devops.md) | CI/CD, build artifacts, infrastructure, identity/configuration, deployment compatibility, production readiness, operational resource bounds, detection or recovery. | [DevOps Reviewer Policy (POL)](references/policies/devops.md) | [DevOps Reviewer Technical Standard (STD)](references/standards/devops.md) |
+| [Performance Reviewer](references/domains/performance.md) | Latency, throughput, resource lifetime, algorithmic cost, I/O, caching, concurrency, capacity, fairness, assets, rendering or performance evidence. | [Performance Reviewer Policy (POL)](references/policies/performance.md) | [Performance Reviewer Technical Standard (STD)](references/standards/performance.md) |
+| [Design Reviewer](references/domains/design.md) | User journeys, adopted design rules, accessibility, responsive presentation, UI states, interaction and browser evidence. | [Design Reviewer Policy (POL)](references/policies/design.md) | [Design Reviewer Technical Standard (STD)](references/standards/design.md) |
+| [Localization Reviewer](references/domains/localization.md) | Locale selection and fallback, translated messages, plural and interpolation rules, locale-sensitive formats, Unicode and bidirectional content, localized UI and delivery evidence. | [Localization Reviewer Policy (POL)](references/policies/localization.md) | [Localization Reviewer Technical Standard (STD)](references/standards/localization.md) |
+| [Compliance Reviewer](references/domains/compliance.md) | Applicable adopted obligations, authority and exceptions, policy-to-implementation traceability, data handling, consent, retention, audit evidence and supported compliance claims within the supplied scope. | [Compliance Reviewer Policy (POL)](references/policies/compliance.md) | [Compliance Reviewer Technical Standard (STD)](references/standards/compliance.md) |
 
-### Claude
+## Project documents and roles
 
-Download the repository ZIP, extract it, and use the folder containing SKILL.md as the skill. For a custom-skill upload, compress that folder with your archive tool. [Claude upload instructions](https://support.claude.com/en/articles/12512180-use-skills-in-claude).
+The lead finds relevant project guidance and passes the useful sections to reviewers. Combined documents and direct task requirements are sufficient; the table describes content, not mandatory paperwork.
 
-## Quick start
+| Document/content | What to compare | Reviewers |
+| --- | --- | --- |
+| Product Requirements Document (PRD), Spec Driven Development document (SDD), Issue, User Story (US), behavioral requirements | Observable behavior, actors, permissions, boundaries, failures and acceptance criteria | Lead accounts for scope; Code traces implementation; Testing checks verification. Route domain constraints to the relevant specialist. |
+| High Level Document (HLD), Decision Record (DR) | Boundaries, dependencies, quality scenarios, accepted choices and tradeoffs | Architecture assesses structure; Code checks local adherence; Security, Database, DevOps and Performance receive affected constraints; Testing receives quality scenarios and accepted compatibility or failure expectations. A decision's rationale is not proof of implementation. |
+| Low Level Design (LLD), Interface Contract (IC) | Types, nullability, units, validation, errors, ordering, state transitions, serialization, compatibility, idempotence, persistence invariants and consistency guarantees | Code and Architecture compare producers/consumers; Security receives access/trust rules; Database receives persistence invariants; Testing receives observable contracts; Performance receives latency, payload, allocation and concurrency constraints; Localization receives text identity, serialization, currency and temporal semantics. Unknown dependency behavior remains unresolved. |
+| Implementation Plan (IP) | Accepted deliverables, dependencies, implementation constraints, verification, mixed-version sequencing and rollout/recovery steps | Lead checks whole-plan coverage; Code checks assigned code deliverables; Testing receives verification; Database receives migration/backfill; DevOps receives rollout/recovery; Performance receives accepted efficiency work, workload assumptions and performance verification. Superseded approaches are context. |
+| Test Plan (TP), Test Specification (TS) | Cases, expected outcomes, fixtures, boundary/failure scenarios and exit criteria | Testing assesses coverage, meaningful expected results, test selection, fixtures and exit criteria; Code and affected specialists check relevant assertions and behaviors. Proposed cases remain proposed; adopted test gates retain their authority, and no universal requirement for all test layers applies. |
+| Test Status Report (TSR), Test Completion Report (TCR) | Actual commands and selection, source revision, environment, dependencies, results, failures, timeouts, retries, skips and limitations | Lead, Testing and affected reviewers assess observed evidence. Results are observations, not normative behavior; stale results do not prove the current code passed. |
+| Organization Policy (POL), project Technical Standard (STD), coding guidelines | Applicable obligations, adopted conventions, named controls, scope and approved exceptions | Lead establishes authority and routes by subject. Code receives naming, file organization, patterns, errors, logging and compatibility rules; other domains receive their actual obligations. Conflicts require resolution. |
+| Threat Model (TM) | Assets, trust boundaries, assumptions, abuse scenarios, controls and accepted residual risks | Security owns threat assessment; Architecture, Database and DevOps assess affected mechanisms; Code checks assigned validation, tenant context and output-handling paths. Testing checks whether verification exercises relevant denied and legitimate behavior. Missing documentation does not suppress applicable technical checks. |
+| Service Objectives Document (SOD), operational How-to Guide (HTG) | Agreed indicators/objectives, deadlines, retry/resource limits, deployment/stop/recovery procedures, dependencies and response responsibilities | DevOps and Architecture assess operational contracts; Database checks storage durability, consistency, backup scope and restore evidence against applicable recovery objectives; Testing assesses evidence; Code traces applicable timeout, cancellation, retry and recovery behavior. Performance receives workload shapes, latency/throughput percentiles, resource budgets, capacity limits, tenant fairness and cost constraints. Source inspection alone does not establish measured attainment. |
+| Design specifications/design system | Required UI states, validation, interactions, accessibility semantics and support matrix | Code checks implementation behavior; Testing assesses the required interaction, browser and accessibility verification and its limits. Design assesses user journeys, adopted design rules, accessible operation, UI states and visual/browser evidence; the lead supplies exact relevant sections and captured image/context evidence. Localization receives script, expansion, direction and localized-state expectations. Unperformed browser or assistive-technology checks stay visible. |
+| Supported-locale requirements | Encoding, timezone/currency meaning, locale formatting, direction, fallback and language requirements | Localization compares supported languages/scripts/channels, message behavior, user/tenant preferences, Unicode, currency/time-zone meaning, formatting, plural rules, fallback, direction, sorting and recipient context. Code checks boundary integration; Design checks presentation; Testing assesses the supplied verification. Route relevant terminology, runtime/catalog versions and linguistic evidence; no standalone locale matrix is mandatory. Technical checks do not establish linguistic approval. |
+| Established licensing/privacy/compliance obligations | Applicable licenses/notices, source headers, sensitive data handling, audit/output and retention requirements | The lead captures the actual scope and authority. Compliance compares exact license/asset terms, distribution or network use, notices and required headers; data categories/purposes, lifecycle, preference and rights contracts; applicable audit, processor, residency and retention requirements. Route dependency inventories, license texts, notices, data maps, retention schedules and actual decisions by content; separate files are optional. Security/Database assess their technical controls; Testing assesses verification. Preserve unresolved legal applicability and obtain qualified interpretation when necessary; do not infer a universal license ban or regulatory regime. |
+| Performance evidence and budgets, including supplied profiles, load results and asset reports | Workload shape and volume, concurrency, duration, environment/version, distributions, resource limits, baseline and changed revision | Performance compares adopted budgets and representative observations; Testing assesses measurement validity; Database receives query/engine evidence; DevOps receives saturation and operational limits; Architecture receives structural constraints. Measurements remain observations, missing workloads remain unknown and proposed targets cannot become obligations. |
 
-Explicitly invoke the skill before giving it a task. Examples below use `/engineering-review`. Use `@engineering-review` in ChatGPT desktop and `$engineering-review` in Codex.
+## Findings and corrections
 
-> /engineering-review Review handler.py and requirements.txt in the supplied project. Keep source unchanged. Use the lead alone unless a specialist materially improves the review. Return supported findings and uncovered work.
+Findings explain the location, triggering behavior, supported consequence and focused correction. The final response also states inspected scope and important limits. Valid partial findings remain useful when another question is unresolved. The optional [handoff](references/templates/review-handoff.md) and [developer response](references/templates/developer-response.md) outlines keep follow-up concise; re-review actual changes without manufacturing missing evidence.
 
-Exact source capture, located findings or supported no-findings, and explicit coverage limits. Missing essential input yields an incomplete review.
+## Maintain the package
 
-## Usage scenarios
-
-### Review one function
-
-> /engineering-review Review parser.py, its caller and criteria.txt; keep the target unchanged.
-
-Lead-owned implementation review with exact citations and unrun checks.
-
-### Review a tenant-sensitive storage change
-
-> /engineering-review Review handler.py, storage.py and tenant criteria. Select security/data review only when useful.
-
-Source-bound specialist results returned to the lead for deduplication, conflict resolution and coverage assessment.
-
-### Review against supplied intent
-
-> /engineering-review Compare the supplied implementation with current agreed requirements and plan sections. Route relevant sections to the responsible reviewers; continue supported review if optional documents are missing.
-
-A v4 ledger with a disposition for every assigned criterion and required criterion/domain pair, source-supported findings, separate approved deviations and explicit coverage limits. Use scripts/review_suite.py --v4 and references/intent_context.md. Missing, stale, proposed and conflicting documents retain their actual status.
-
-## Verification
-
-```sh
-python3 scripts/review_eval.py --preflight
-```
-
-The authoritative v3 corpus has complete input fixtures, coherent role resources and matching host case selection. This is not agent-performance evidence.
-
-## Evaluate and improve results
-
-Preserve historical evals/cases.json, evals/v1_cases.json, evals/suite_cases.json and the complete v3 corpus in evals/review_v3_cases.json. Current alignment controls and the scoped v4 behavior case live in evals/alignment_cases.json. Review frozen cases, stage only performing inputs and keep expected answers and run records outside the task context. Default config/host_validation.json retains its full v3 matrix; a scoped v4 host plan must not be described as that full matrix passing. Use impacted checks during implementation and author-verified final-suite eligibility after all implementation is delivered.
-
-### Acceptance criteria
-
-- Impacted mechanical controls pass without weakening legacy checks.
-- Actual defect/clean tasks and public traces establish supported findings, false-positive limits, role ownership and recovery.
-- Both frozen Codex and Claude Code matrices require actual reviewed tasks; missing cells remain incomplete.
-- V4 rejects assigned and globally omitted criteria, wrong document routing and unsupported deviations; actual scoped host evidence is reported separately from historical matrix coverage.
-
-### Run the evaluations
-
-Use the evaluation command below. Replace named placeholders with the paths returned by the skill.
-
-```sh
-python3 scripts/review_eval.py --allow-exec
-```
-
-### Read the results
-
-| Result field | Meaning |
-| --- | --- |
-| `task_success_percent` | Accepted task attempts ÷ evaluated attempts × 100 |
-| `coverage_percent` | Evaluated attempts ÷ planned attempts × 100 |
-| `critical_failures` | Failed non-negotiable requirements; these block acceptance |
-| `pending_review` | Outputs that still need a semantic judgment |
-
-For example, 8 accepted attempts out of 10 evaluated attempts gives 80% task success. If 12 attempts were planned, coverage is 83.3%. A missing denominator is reported as not measured. Wrong or malformed task outputs count as failed attempts. Infrastructure gaps reduce coverage. A quality rubric score is reported separately from truth-based accuracy.
-
-A candidate is accepted only when its declared target, coverage, critical checks, and required reviews pass. An installation self-check is not a complete quality assessment of a generated skill.
-
-Missing actual AI observations remain unrun. Import the captured results with `--observations PATH` on the evaluation command and review the refreshed evidence before acceptance. Generated maintenance sessions report incomplete coverage as `awaiting_observations`; refreshing the unchanged candidate retains earlier reports without spending another tuning experiment. Complete failures and runtime limits still apply.
-
-### Improve and retest
-
-1. Run scripts/run_tests.py --execute for mapped impacted controls. Use scripts/review_eval.py with --case and --observations for explicit bounded cases; missing observations remain unrun.
-2. Fix concrete failures within exact paths; retain failures and frozen criteria. Run scripts/run_tests.py --full --completion-record RECORD.json --execute only after author verification of every planned implementation step.
-3. Freeze scripts/host_coverage.py with config/host_validation.json, review actual outputs/traces, then assess the same source-bound host plan.
-
-## Models and run limits
-
-AI work uses the model already available in the current host. The skill records an unknown model identity rather than guessing one. Mechanical operations run through the packaged scripts.
-
-Routine testing includes necessary bounded retries without approval for each extra test. The skill records the reason, preserves earlier attempts and stops when progress stalls or retry ceilings are reached. Explicit user hard limits still apply. Requirements and scoring stay fixed.
-
-## Troubleshooting
-
-### The report is refused after a source change.
-
-Preserve the old artifacts, capture current selected bytes and review the affected change before validating again.
-
-### The host cannot expose its exact model identity.
-
-Record the requested profile and keep observed_model null; do not infer provider identity or switch accounts.
-
-### A nested lead has no dispatch tool or sufficient depth.
-
-Use an authorized parent to dispatch selected specialist siblings and return results to the lead, or mark uncovered work incomplete. See references/host_setup.md.
-
-## Support
-
-Give the maintaining lead the exact package/source hashes, failed control or refusal and redacted evidence. Do not include credentials.
+See [AGENTS.md](AGENTS.md). Run `python3 -B -m unittest discover -s tests -p test_package.py -v` for installer and asset checks. Inspect affected links and instruction meaning. These checks do not prove domain expertise or native-host execution; use a bounded host smoke only when the changed behavior warrants one.
 
 ## License
 
-MIT, Manaferra Inc.
-
-<!-- repository:start -->
-
-## Documentation
-
-One root skill with optional Claude Markdown and Codex TOML role assets. Host activation requires actual evidence.
-
-- [Policy (POL)](references/review_policy.md)
-- [Technical Standard (STD)](references/review_standard.md)
-- [Coordination](references/coordination.md)
-- [Host setup](references/host_setup.md)
-- [Project profile](references/project_profile.md)
-- [Criteria selection](references/review_criteria.md)
-- [Project intent and alignment](references/intent_context.md)
-
-<!-- repository:end -->
-
-<!-- skill-readme:source -->
+MIT; see [LICENSE](LICENSE).

@@ -1,112 +1,175 @@
 #!/usr/bin/env python3
-"""Install the skill repository or make a host-upload ZIP."""
+"""Copy Engineering Review, register its native agents, or create a ZIP (Python 3.11+)."""
 import argparse
 import json
+import os
 from pathlib import Path
 import re
+import shutil
 import sys
-import os
-import tempfile
 import zipfile
 
-from evaluate import copy_package, hash_tree
+
+HOSTS = {"codex": ("codex", ".toml"), "claude-code": ("claude", ".md")}
+
+
+def checked_path(value):
+    """Reject symlinks before resolving a user-supplied path."""
+    path = Path(os.path.abspath(Path(value).expanduser()))
+    if any(part.is_symlink() for part in (path, *path.parents)):
+        raise ValueError(f"Symlink paths are not supported: {path}")
+    return path.resolve()
 
 
 def skill_name(source):
-    source = Path(source).resolve()
-    text = (source / "SKILL.md").read_text()
-    header = text.split("---\n", 2)
-    match = re.search(r"^name:\s*['\"]?([a-z0-9]+(?:-[a-z0-9]+)*)['\"]?\s*$", header[1], re.M) if len(header) == 3 and not header[0] else None
+    text = (source / "SKILL.md").read_text(encoding="utf-8")
+    parts = text.split("---\n", 2)
+    match = re.search(r"^name:\s*['\"]?([a-z0-9]+(?:-[a-z0-9]+)*)['\"]?\s*$", parts[1], re.M) if len(parts) == 3 and not parts[0] else None
     if not match:
-        raise ValueError("The source needs valid SKILL.md name metadata.")
+        raise ValueError("SKILL.md needs a valid name in its frontmatter.")
     return match[1]
 
 
+def package_files(source):
+    """Select only the skill, knowledge, native assets and standalone installer."""
+    files = []
+    for name in ("SKILL.md", "README.md", "LICENSE"):
+        path = source / name
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(f"Required regular file missing: {path}")
+        files.append(path)
+    for name in ("references", "assets"):
+        directory = source / name
+        if directory.is_symlink() or not directory.is_dir():
+            raise ValueError(f"Required regular directory missing: {directory}")
+        for path in sorted(directory.rglob("*")):
+            if path.is_symlink():
+                raise ValueError(f"Symlink in package: {path}")
+            if path.name == ".DS_Store" or any(p in {"__pycache__", ".pytest_cache"} for p in path.parts):
+                continue
+            if path.is_file():
+                files.append(path)
+            elif not path.is_dir():
+                raise ValueError(f"Unsupported package entry: {path}")
+    installer = source / "scripts" / "install_skill.py"
+    if installer.exists() or installer.is_symlink():
+        checked_path(installer)
+        if not installer.is_file():
+            raise ValueError("Installer must be a regular file.")
+        files.append(installer)
+    return files
+
+
 def install(source, host, destination=None):
-    source = Path(source).resolve()
+    if host not in HOSTS:
+        raise ValueError("Unknown host.")
+    source = checked_path(source)
     name = skill_name(source)
-    base = Path.home() / (".agents/skills" if host == "codex" else ".claude/skills")
-    destination = Path(destination).expanduser().resolve() if destination else base / name
-    if destination.is_relative_to(source) or source.is_relative_to(destination):
-        raise ValueError("Installation destination must be separate from the source.")
-    files = copy_package(source, destination, profile="runtime")
-    return {"status": "installed", "name": name, "host": host, "destination": str(destination), "files": len(files)}
-
-
-def make_archive(source, output):
-    source, output = Path(source).resolve(), Path(output).expanduser().resolve()
-    name = skill_name(source)
-    if output.is_relative_to(source):
-        raise ValueError("Write the upload ZIP outside the source folder.")
-    before = hash_tree(source)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="skill-upload-") as folder:
-        stage = Path(folder) / name
-        copy_package(source, stage, profile="runtime")
-        files = hash_tree(stage)
-        descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        try:
-            with os.fdopen(descriptor, "wb") as stream, zipfile.ZipFile(stream, "w", zipfile.ZIP_DEFLATED) as archive:
-                for relative in sorted(files):
-                    archive.write(stage / relative, f"{name}/{relative}")
-            if hash_tree(source) != before:
-                raise ValueError("Source changed during packaging.")
-        except Exception:
-            output.unlink(missing_ok=True)
-            raise
-    return {"status": "packaged", "name": name, "path": str(output), "files": len(files)}
+    files = package_files(source)
+    default = Path.home() / (".agents" if host == "codex" else ".claude") / "skills" / name
+    target = checked_path(destination if destination is not None else default)
+    if source == target or source in target.parents or target in source.parents:
+        raise ValueError("Source and installation destination must not overlap.")
+    if target.exists() and (not target.is_dir() or any(target.iterdir())):
+        raise ValueError(f"Installation destination must be absent or empty: {target}")
+    target.mkdir(parents=True, exist_ok=True)
+    for path in files:
+        output = target / path.relative_to(source)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, output)
+    return {"destination": str(target), "files": len(files)}
 
 
 def register_agents(source, host, destination, preview=False):
-    """Register selected package roles without overwriting customized host files."""
-    source=Path(source).resolve();destination=Path(destination).absolute()
-    if destination.resolve().is_relative_to(source) or destination.is_symlink():
-        raise ValueError('Agent directory must be separate from package and not symlinked.')
-    folder='codex' if host=='codex' else 'claude'
-    roles=json.loads((source/'config/roles.json').read_text())
-    extension='toml' if host=='codex' else 'md'
-    files={}
-    for role in ['lead',*roles['specialists']]:
-        name=f'engineering-review-{role}.{extension}'
-        content=(source/'assets'/folder/name).read_text().replace('{{SKILL_ROOT}}',str(source))
-        target=destination/name
-        if target.is_symlink() or target.exists() and target.read_text()!=content:
-            raise ValueError('Preserve customized agent; conflicting destination: '+str(target))
-        files[name]=content
+    if host not in HOSTS:
+        raise ValueError("Unknown host.")
+    source = checked_path(source)
+    skill_name(source)
+    subdir, suffix = HOSTS[host]
+    directory = checked_path(source / "assets" / subdir)
+    assets = sorted(directory.glob(f"engineering-review-*{suffix}"))
+    if not assets:
+        raise ValueError(f"No native assets found in {directory}")
+    target = checked_path(destination)
+    if target.exists() and not target.is_dir():
+        raise ValueError("Agent destination must be a directory.")
+    if target == source or source in target.parents or target in source.parents:
+        raise ValueError("Agent destination and source must not overlap.")
+    planned = []
+    for asset in assets:
+        if asset.is_symlink() or not asset.is_file():
+            raise ValueError(f"Native asset must be a regular file: {asset}")
+        text = asset.read_text(encoding="utf-8").replace("{{SKILL_ROOT}}", str(source))
+        if host == "codex":
+            import tomllib
+            tomllib.loads(text)
+        output = checked_path(target / asset.name)
+        if output.exists() and (not output.is_file() or output.read_bytes() != text.encode("utf-8")):
+            raise ValueError(f"Refusing to replace customized native agent: {output}")
+        planned.append((output, text, output.exists()))
     if not preview:
-        destination.mkdir(parents=True,exist_ok=True)
-        for name,content in files.items():
-            target=destination/name
-            if not target.exists():
-                with target.open('x') as stream:stream.write(content)
-    return {'status':'preview' if preview else 'registered','host':host,'skill_root':str(source),'destination':str(destination),'files':list(files),'limits':'Registration is not proof of host loading or behavior.'}
+        target.mkdir(parents=True, exist_ok=True)
+        for output, text, exists in planned:
+            if not exists:
+                with output.open("x", encoding="utf-8", newline="") as stream:
+                    stream.write(text)
+    return {"source": str(source), "agents_dir": str(target), "preview": preview,
+            "agents": [{"path": str(path), "status": "unchanged" if exists else "planned" if preview else "created"}
+                       for path, _, exists in planned]}
 
 
-def main():
+def make_archive(source, output):
+    source = checked_path(source)
+    name = skill_name(source)
+    files = package_files(source)
+    output = checked_path(output)
+    if output == source or source in output.parents:
+        raise ValueError("Archive must be outside the source package.")
+    if output.exists():
+        raise ValueError(f"Archive already exists: {output}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("xb") as stream:
+        try:
+            with zipfile.ZipFile(stream, "w", zipfile.ZIP_DEFLATED) as archive:
+                for path in files:
+                    archive.write(path, str(Path(name) / path.relative_to(source)))
+        except Exception:
+            output.unlink()
+            raise
+    return {"archive": str(output), "files": len(files)}
+
+
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    action = parser.add_mutually_exclusive_group(required=True)
-    action.add_argument("--host", choices=["codex", "claude-code"])
-    action.add_argument("--archive", type=Path, help="Create an upload ZIP outside the source folder.")
-    parser.add_argument("--destination", type=Path)
     parser.add_argument("--source", type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument('--agents-dir',type=Path,help='Register role assets from an already installed --source; no skill copy.')
-    parser.add_argument('--preview',action='store_true',help='Preview role registration without writing.')
-    args = parser.parse_args()
-    if args.archive and args.destination:
-        parser.error("--destination is only used with --host.")
+    parser.add_argument("--host", choices=HOSTS)
+    parser.add_argument("--destination", type=Path, help="Exact skill installation directory")
+    parser.add_argument("--agents-dir", type=Path, help="Register native agents referencing --source")
+    parser.add_argument("--preview", action="store_true", help="Preview agent registration without writing")
+    parser.add_argument("--archive", type=Path, help="Create a ZIP instead of installing")
+    args = parser.parse_args(argv)
+    if args.archive:
+        if args.host or args.destination or args.agents_dir or args.preview:
+            parser.error("--archive cannot be combined with installation or registration options")
+    elif not args.host:
+        parser.error("--host is required for installation or registration")
+    elif args.agents_dir and args.destination:
+        parser.error("--agents-dir cannot be combined with --destination")
+    elif args.preview and not args.agents_dir:
+        parser.error("--preview requires --agents-dir")
     try:
-        if args.agents_dir:
-            if not args.host or args.destination or args.archive:parser.error('--agents-dir requires --host and an already installed --source, without --destination/--archive')
-            result=register_agents(args.source,args.host,args.agents_dir,args.preview)
+        if args.archive:
+            result = make_archive(args.source, args.archive)
+        elif args.agents_dir:
+            result = register_agents(args.source, args.host, args.agents_dir, args.preview)
         else:
-            if args.preview:parser.error('--preview applies to --agents-dir')
-            result = make_archive(args.source, args.archive) if args.archive else install(args.source, args.host, args.destination)
-        print(json.dumps(result, indent=2))
-        return 0
+            result = install(args.source, args.host, args.destination)
     except (OSError, ValueError) as error:
-        print(json.dumps({"error": str(error)}), file=sys.stderr)
-        return 2
+        print(f"error: {error}", file=sys.stderr)
+        return 1
+    print(json.dumps(result, indent=2))
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

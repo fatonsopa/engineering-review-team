@@ -2,7 +2,7 @@
 
 ## Context
 
-These illustrative examples calibrate reasoning. They are not facts about a reviewed project. Apply the [domain procedure](../domains/implementation.md) to actual captured inputs.
+These illustrative examples calibrate reasoning. They are not facts about a reviewed project. Apply the [domain procedure](../domains/code.md) to actual captured inputs.
 
 ## How it works and why
 
@@ -14,7 +14,7 @@ Record the applicable criterion, observed source flow and consequence. A finding
 
 ## Tradeoffs and limits
 
-Missing source or runtime evidence prevents a complete conclusion where it is essential. Do not promote a teaching assumption into a project requirement. A schema receipt validates bindings, not the truth of an engineering judgment.
+Missing source or runtime evidence prevents a complete conclusion where it is essential. Do not promote a teaching assumption into a project requirement. A consistent report does not by itself establish the truth of an engineering judgment.
 
 ## Related sources
 
