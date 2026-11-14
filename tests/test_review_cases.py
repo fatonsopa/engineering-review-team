@@ -6,6 +6,7 @@ outputs against review_cases.json; expected answers are never staged for the AI.
 import argparse
 import json
 from pathlib import Path, PurePosixPath
+import re
 import sys
 import tempfile
 import unittest
@@ -17,6 +18,22 @@ from install_skill import install, register_agents
 
 def cases():
     return json.loads((ROOT / "tests/review_cases.json").read_text())
+
+
+def validate_control_coverage(case):
+    """Development inventory check only; this cannot establish AI behavior."""
+    standard = (ROOT / "references/standards" / (case["id"] + ".md")).read_text()
+    required = set(re.findall(r"^### ([A-Z]+-\d{2})\b", standard, re.M))
+    covered = {control for scenario in case["additional_scenarios"]
+               for control in scenario["controls"]}
+    if required - covered:
+        raise ValueError("Uncovered controls: " + ", ".join(sorted(required - covered)))
+    expected = set(case["required_expectations"])
+    present = {scenario["id"] + "/" + expectation["id"]
+               for scenario in case["additional_scenarios"]
+               for expectation in scenario["expectations"]}
+    if expected != present:
+        raise ValueError("Expectation inventory changed: " + ", ".join(sorted(expected ^ present)))
 
 
 def stage(pending, destination, host, prompt):
@@ -39,14 +56,25 @@ def stage(pending, destination, host, prompt):
     return destination
 
 
-def prepare(identifier, destination, host="codex"):
+def prepare(identifier, destination, host="codex", scenario_ids=None):
+    native_skills = ".agents/skills" if host == "codex" else ".claude/skills"
+    entry = Path(destination).expanduser().resolve() / native_skills / "engineering-review/SKILL.md"
     if identifier == "lifecycle":
         case = json.loads((ROOT / "tests/lifecycle_case.json").read_text())
         return stage({p: text.encode() for p, text in case["files"].items()},
-                     destination, host, case["instruction"])
+                     destination, host, case["instruction"].replace("./skill/SKILL.md", str(entry)))
     case = next(c for c in cases() if c["id"] == identifier)
+    available = case["scenarios"] + case.get("additional_scenarios", [])
+    selected = case["scenarios"]
+    if scenario_ids is not None:
+        by_id = {scenario["id"]: scenario for scenario in available}
+        if not scenario_ids or len(set(scenario_ids)) != len(scenario_ids):
+            raise ValueError("Select distinct scenario IDs.")
+        if set(scenario_ids) - by_id.keys():
+            raise ValueError("Unknown scenario ID for this reviewer.")
+        selected = [by_id[scenario_id] for scenario_id in scenario_ids]
     pending = {}
-    for scenario in case["scenarios"]:
+    for scenario in selected:
         prefix = scenario["id"]
         pending[f"{prefix}/requirements.txt"] = scenario["requirements"].encode()
         for name, content in scenario["files"].items():
@@ -61,9 +89,10 @@ def prepare(identifier, destination, host="codex"):
         f"registered {case['agent']} native specialist. "
     )
     prompt = (
-        "Use Engineering Review Team at ./skill/SKILL.md. " + route +
+        "Use Engineering Review Team at " + str(entry) + ". " + route +
         "The supplied synthetic implementation was authored in "
-        "a separate context. Assess case-a and case-b separately against each "
+        "a separate context. Assess only " + ", ".join(s["id"] for s in selected) +
+        " separately against each "
         "scenario's requirements.txt; do not assume either must contain a defect. "
         "All source, evidence and installed guidance within this workspace are "
         "authorized to read. Inspect the relevant actual files, including supplied "
@@ -101,6 +130,8 @@ class ReviewFixtureTests(unittest.TestCase):
                 self.assertFalse((destination / "skill/tests").exists())
                 native = ".agents/skills" if host == "codex" else ".claude/skills"
                 self.assertEqual((destination / "skill").resolve(), destination / native / "engineering-review")
+                self.assertIn(str(destination / native / "engineering-review/SKILL.md"),
+                              (destination / "prompt.txt").read_text())
                 self.assertFalse(any("review_cases.json" == p.name for p in destination.rglob("*")))
                 self.assertNotIn(cases()[0]["expected"][0], (destination / "prompt.txt").read_text())
                 with self.assertRaises(FileExistsError):
@@ -113,6 +144,48 @@ class ReviewFixtureTests(unittest.TestCase):
                 for name, source in scenario["binary_files"].items():
                     self.assertEqual((destination / scenario["id"] / name).read_bytes(),
                                      (ROOT / "tests" / source).read_bytes())
+
+    def test_selected_extended_cases_preserve_inputs_and_hide_oracles(self):
+        for case in cases():
+            extended = case.get("additional_scenarios", [])
+            if not extended:
+                continue
+            scenario = extended[0]
+            with self.subTest(reviewer=case["id"]), tempfile.TemporaryDirectory() as folder:
+                destination = prepare(case["id"], Path(folder) / "selected",
+                                      scenario_ids=[scenario["id"]])
+                self.assertFalse((destination / "case-a").exists())
+                for path, source in scenario["files"].items():
+                    self.assertEqual((destination / scenario["id"] / path).read_text(), source)
+                self.assertFalse((destination / "skill/tests").exists())
+                self.assertFalse((destination / "expectations.json").exists())
+                with self.assertRaisesRegex(ValueError, "Unknown scenario"):
+                    prepare(case["id"], Path(folder) / "invalid", scenario_ids=["not-a-case"])
+                self.assertFalse((Path(folder) / "invalid").exists())
+
+    def test_extended_inventory_rejects_missing_control_coverage(self):
+        from copy import deepcopy
+        for case in cases():
+            extended = case.get("additional_scenarios", [])
+            if not extended:
+                continue
+            with self.subTest(reviewer=case["id"]):
+                validate_control_coverage(case)
+                omitted = extended[0]["controls"][0]
+                incomplete = deepcopy(case)
+                for scenario in incomplete["additional_scenarios"]:
+                    scenario["controls"] = [control for control in scenario["controls"] if control != omitted]
+                with self.assertRaisesRegex(ValueError, "Uncovered controls: " + omitted):
+                    validate_control_coverage(incomplete)
+                missing_criterion = deepcopy(case)
+                missing_criterion["additional_scenarios"][0]["expectations"].pop()
+                with self.assertRaisesRegex(ValueError, "Expectation inventory changed"):
+                    validate_control_coverage(missing_criterion)
+                for scenario in extended:
+                    self.assertTrue(scenario["expectations"])
+                    self.assertTrue(scenario["controls"])
+                    self.assertEqual(len({e["id"] for e in scenario["expectations"]}),
+                                     len(scenario["expectations"]))
 
     def test_lifecycle_stages_only_initial_source_and_no_expected_answers(self):
         case = json.loads((ROOT / "tests/lifecycle_case.json").read_text())
@@ -163,7 +236,8 @@ if __name__ == "__main__":
         parser.add_argument("--prepare", required=True, choices=[c["id"] for c in cases()] + ["lifecycle"])
         parser.add_argument("--destination", type=Path, required=True)
         parser.add_argument("--host", choices=["codex", "claude-code"], default="codex")
+        parser.add_argument("--cases", nargs="+", help="Select retained scenario IDs; defaults to the original pair.")
         args = parser.parse_args()
-        print(prepare(args.prepare, args.destination, args.host))
+        print(prepare(args.prepare, args.destination, args.host, args.cases))
     else:
         unittest.main()
