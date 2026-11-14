@@ -59,8 +59,10 @@ def stage(pending, destination, host, prompt):
 def prepare(identifier, destination, host="codex", scenario_ids=None):
     native_skills = ".agents/skills" if host == "codex" else ".claude/skills"
     entry = Path(destination).expanduser().resolve() / native_skills / "engineering-review/SKILL.md"
-    if identifier == "lifecycle":
+    if identifier == "lifecycle" or identifier.startswith("TEAM-"):
         case = json.loads((ROOT / "tests/lifecycle_case.json").read_text())
+        if identifier != "lifecycle":
+            case = next(c for c in case["team_scenarios"] if c["id"] == identifier)
         return stage({p: text.encode() for p, text in case["files"].items()},
                      destination, host, case["instruction"].replace("./skill/SKILL.md", str(entry)))
     case = next(c for c in cases() if c["id"] == identifier)
@@ -198,6 +200,17 @@ class ReviewFixtureTests(unittest.TestCase):
             self.assertNotEqual((destination / "src/lookup.py").read_text(),
                                 case["follow_up_files"]["src/lookup.py"])
             self.assertFalse((destination / "skill/tests").exists())
+        for scenario in case.get("team_scenarios", []):
+            for host in ("codex", "claude-code"):
+                with self.subTest(scenario=scenario["id"], host=host), tempfile.TemporaryDirectory() as folder:
+                    destination = prepare(scenario["id"], Path(folder) / "team", host)
+                    for name, source in scenario["files"].items():
+                        self.assertEqual((destination / name).read_text(), source)
+                    self.assertFalse((destination / "skill/tests").exists())
+                    self.assertFalse((destination / "grading.json").exists())
+                    native = ".agents/skills" if host == "codex" else ".claude/skills"
+                    self.assertIn(str(destination / native / "engineering-review/SKILL.md"),
+                                  (destination / "prompt.txt").read_text())
 
     def test_lifecycle_fixture_has_the_declared_boundary_and_partial_fix(self):
         # Fixture code is reviewed, pure test data; this is preflight of the
@@ -235,7 +248,10 @@ class ReviewFixtureTests(unittest.TestCase):
 if __name__ == "__main__":
     if "--prepare" in sys.argv:
         parser = argparse.ArgumentParser(description="Prepare one native-host review; does not launch a model.")
-        parser.add_argument("--prepare", required=True, choices=[c["id"] for c in cases()] + ["lifecycle"])
+        shared = json.loads((ROOT / "tests/lifecycle_case.json").read_text())
+        parser.add_argument("--prepare", required=True,
+                            choices=[c["id"] for c in cases()] + ["lifecycle"] +
+                            [c["id"] for c in shared.get("team_scenarios", [])])
         parser.add_argument("--destination", type=Path, required=True)
         parser.add_argument("--host", choices=["codex", "claude-code"], default="codex")
         parser.add_argument("--cases", nargs="+", help="Select retained scenario IDs; defaults to the original pair.")

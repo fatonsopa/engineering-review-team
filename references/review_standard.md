@@ -30,7 +30,7 @@ Return findings, inspected scope and important limitations to the lead in a conc
 
 ## Developer handoff and response contract
 
-Give the developer the retained findings, reviewed source, suggested corrections, verification needs and unresolved decisions. The optional [handoff template](templates/review-handoff.md) can be included in the review itself.
+Give the developer the retained findings, reviewed source, suggested corrections, verification needs and unresolved decisions. Before handoff, account for each original finding—including fixed, partial, deferred and blocked items—by retaining its correction, material tradeoffs and verification obligations in concise text or explicit stable per-finding references; explain source- or criterion-based revisions and account for omissions. The optional [handoff template](templates/review-handoff.md) can be included in the review itself.
 
 The developer responds per finding with what changed or why it remains disputed, deferred or blocked; relevant files/revision; actual checks and results; and remaining risks or decisions. One shared fix can reference several findings. Partial fixes and omitted responses remain visible. Do not demand commits or pre-fix execution logs that do not exist; use the working tree and explain evidence limits. See the optional [response template](templates/developer-response.md).
 
