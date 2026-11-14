@@ -26,7 +26,7 @@ Combine reports of the same underlying failure while preserving relevant consequ
 
 ## Specialist return
 
-Return findings, inspected scope and important limitations to the lead in a concise message. Prefer per-scope outcomes; verify aggregate counts before reporting them. Report useful partial findings even when another question is blocked. Distinguish a source defect from a missing input, denied tool or unperformed check. Do not invent a successful inspection, alter sources or take over the final user response.
+Return findings, inspected scope and important limitations to the lead in a concise message. Prefer per-scope outcomes; verify aggregate counts before reporting them. Opening summaries must preserve mixed met, partial and not-assessed outcomes rather than override detailed limitations with an overall pass. Report useful partial findings even when another question is blocked. When another specialty is required, name the owner role and precise unassessed evidence or question in the request to the lead; a referral does not establish completed coverage. Distinguish a source defect from a missing input, denied tool or unperformed check. Do not invent a successful inspection, alter sources or take over the final user response.
 
 ## Developer handoff and response contract
 

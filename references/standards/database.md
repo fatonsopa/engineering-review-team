@@ -81,7 +81,7 @@ For example, an evictable Redis cache and Redis used as the sole store have diff
 
 The persisted representation and enforcement must preserve the applicable invariants for every relevant writer and existing population.
 
-- Check units, numeric precision/range, null versus missing values, defaults, encoding/collation, timestamp meaning and identifier representation. An opaque identifier such as `0087` must not lose significant characters through numeric conversion.
+- Check units, numeric precision/range, null versus missing values, defaults, encoding/collation, timestamp meaning and identifier representation. An opaque identifier such as `0087` must not lose significant characters through numeric conversion. Distinguish explicit NULL, an omitted field resolved by a default, and an unknown value across every relevant writer; rejecting NULL does not itself forbid a contract-compatible default for omission.
 - Match uniqueness, required values, references, ownership and allowed states to actual enforcement. Inspect composite keys, null semantics, deferred validation, cascade effects and constraint/validator bypass paths.
 - Check storage-level enforcement where the engine supports the needed guarantee. If application coordination supplies it instead, trace all writers and concurrency behavior; do not accept an unprotected existence precheck as equivalent.
 - Compare declared rules with their enabled, validated state and historical data. Inspect representative invalid and valid values, not only fresh empty schemas.
