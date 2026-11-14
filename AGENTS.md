@@ -8,4 +8,8 @@ Preserve substantive technical controls, user overrides, conditional applicabili
 
 Validate changes proportionately: use the installer safety tests for setup changes, check affected links and native asset syntax, and inspect meaning for instruction changes. The small package check is `python3 -B -m unittest discover -s tests -p test_package.py -v`. Reuse passed unaffected checks. Do not invalidate evidence solely for bookkeeping hashes or automatically expand live model testing into a grid. A targeted host smoke is useful only for a changed host interaction; static parsing does not prove actual host behavior.
 
+Simplification must not remove agreed behavior or acceptance requirements without a clear requirement change.
+
+Retain the smallest representative behavioral regressions for each changed reviewer or workflow; claim full readiness only with relevant actual evidence, since static and setup checks are insufficient.
+
 Preserve unrelated user changes. Publish or merge only within the user's existing authority; normal editing and testing do not grant publication permission.
