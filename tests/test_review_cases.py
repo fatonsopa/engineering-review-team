@@ -171,7 +171,7 @@ class ReviewFixtureTests(unittest.TestCase):
                 continue
             with self.subTest(reviewer=case["id"]):
                 validate_control_coverage(case)
-                omitted = extended[0]["controls"][0]
+                omitted = next(control for scenario in extended for control in scenario["controls"])
                 incomplete = deepcopy(case)
                 for scenario in incomplete["additional_scenarios"]:
                     scenario["controls"] = [control for control in scenario["controls"] if control != omitted]
@@ -183,7 +183,9 @@ class ReviewFixtureTests(unittest.TestCase):
                     validate_control_coverage(missing_criterion)
                 for scenario in extended:
                     self.assertTrue(scenario["expectations"])
-                    self.assertTrue(scenario["controls"])
+                    self.assertTrue(scenario["controls"] or scenario.get("guidance"))
+                    for guidance in scenario.get("guidance", []):
+                        self.assertTrue((ROOT / guidance).is_file(), guidance)
                     self.assertEqual(len({e["id"] for e in scenario["expectations"]}),
                                      len(scenario["expectations"]))
 
