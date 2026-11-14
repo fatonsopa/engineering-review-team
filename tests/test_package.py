@@ -26,6 +26,7 @@ class InstallerTests(unittest.TestCase):
             "SKILL.md": "---\nname: engineering-review\n---\n# Review\n",
             "README.md": "# Install\n", "LICENSE": "license\n",
             "references/policy.md": "policy\n", "scripts/install_skill.py": "# installer\n",
+            "scripts/check_review.py": "# acceptance checker\n",
             "config/obsolete.json": "{}",
         }.items():
             (self.source / name).write_text(text)
@@ -41,6 +42,8 @@ class InstallerTests(unittest.TestCase):
         installer.install(self.source, "codex", target)
         self.assertEqual((target / "SKILL.md").read_bytes(), (self.source / "SKILL.md").read_bytes())
         self.assertTrue((target / "scripts/install_skill.py").is_file())
+        self.assertEqual((target / "scripts/check_review.py").read_bytes(),
+                         (self.source / "scripts/check_review.py").read_bytes())
         self.assertFalse((target / "config").exists())
         with self.assertRaises(ValueError):
             installer.install(self.source, "codex", target)

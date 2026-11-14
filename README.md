@@ -10,13 +10,39 @@ Use the skill in your current host and name the target, expected behavior and re
 
 ## Install
 
-Python 3.11+ is needed only for the standalone installer:
+Python 3.11+ is needed for the standalone installer and structural acceptance checker:
 
 ```sh
 python3 scripts/install_skill.py --host codex --destination /absolute/path/to/engineering-review
 ```
 
 Use `--host claude-code` for Claude Code. To register optional native roles, run the installed installer with `--source /absolute/path/to/engineering-review --agents-dir /path/to/project/.codex/agents --host codex --preview`; Claude Code uses `.claude/agents` and `--host claude-code`. Remove `--preview` to write after checking the destination. See [host setup](references/host_setup.md) for conflicts, permissions and archive creation. Asset files do not prove actual host execution.
+
+## Structural acceptance check
+
+The main-context lead uses the [shared acceptance contract](references/review_standard.md#structural-acceptance-check); specialists still return prose. Create a trusted `assignment.json` independently of the report, for example:
+
+```json
+{"criteria":["R1"],"sources":["src/service.py"],"requirements":["requirements.md"]}
+```
+
+Paths resolve from the assignment directory. Optional `active` defaults to `true`; the trusted assigning authority sets it to `false` to revoke the assignment, preventing reads of its declared source/requirements/evidence files. This flag is not an independent permission grant. Before inspection or dispatch, capture once outside the target; `SKILL` below means the installed skill directory:
+
+```sh
+python3 -B SKILL/scripts/check_review.py capture assignment.json > snapshot.json
+```
+
+After review, supply `report.json` outside the target with the unchanged captured object in `snapshot`, the actual outcome and every assigned disposition. This example uses illustrative hashes; replace the entire snapshot with the capture output:
+
+```json
+{"snapshot":{"assignment_sha256":"CAPTURED_HASH","criteria":["R1"],"files":{"src/service.py":"CAPTURED_HASH","requirements.md":"CAPTURED_HASH"}},"outcome":"completed","dispositions":{"R1":"met"}}
+```
+
+```sh
+python3 -B SKILL/scripts/check_review.py check assignment.json report.json
+```
+
+Use `-` instead of `report.json` to read the same JSON from standard input without writing a file. Capture prints assignment identity, captured criteria and file hashes directly; unreadable files or revoked capture have `null` hashes and reported issues, with exit 1. Report IDs are validated against captured criteria; clean acceptance also requires active, matching current criteria and bindings. Cancellation after criteria change or revocation remains recordable, not accepted. Cite the actual result. A completed report with known contradictions remains a valid, complete review but is not clean acceptance. Exit 0 accepts current, complete, all-met coverage; 1 retains a valid but nonaccepted report; 2 reports malformed input or an input error. Contradictions, missing coverage, failures and stale evidence cannot become clean acceptance. The checker does not edit reports, judge semantic truth, prove inspection or approve release; it checks only trusted assignment paths and bindings at check time under actual host permissions. If the check cannot run, structural acceptance remains unverified.
 
 ## Reviewers and shared guidance
 

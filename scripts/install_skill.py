@@ -31,7 +31,7 @@ def skill_name(source):
 
 
 def package_files(source):
-    """Select only the skill, knowledge, native assets and standalone installer."""
+    """Select the skill, knowledge, native assets and standalone utilities."""
     files = []
     for name in ("SKILL.md", "README.md", "LICENSE"):
         path = source / name
@@ -51,12 +51,13 @@ def package_files(source):
                 files.append(path)
             elif not path.is_dir():
                 raise ValueError(f"Unsupported package entry: {path}")
-    installer = source / "scripts" / "install_skill.py"
-    if installer.exists() or installer.is_symlink():
-        checked_path(installer)
-        if not installer.is_file():
-            raise ValueError("Installer must be a regular file.")
-        files.append(installer)
+    for name in ("install_skill.py", "check_review.py"):
+        script = source / "scripts" / name
+        if script.exists() or script.is_symlink():
+            checked_path(script)
+            if not script.is_file():
+                raise ValueError(f"Package utility must be a regular file: {script}")
+            files.append(script)
     return files
 
 

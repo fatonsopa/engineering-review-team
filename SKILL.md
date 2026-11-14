@@ -34,4 +34,4 @@ Use the [developer handoff](references/review_standard.md#developer-handoff-and-
 | [Compliance](references/domains/compliance.md) | Third-party rights, notices, data lifecycle, privacy preferences, audit evidence or established contractual/regulatory obligations |
 
 
-For visual evidence, use the host's image tools and [image evidence guidance](references/image_evidence.md). State what you actually viewed and which interactions remain untested. See [host setup](references/host_setup.md) to install optional native roles. No review database, CLI lifecycle or structured response format is required.
+For visual evidence, use the host's image tools and [image evidence guidance](references/image_evidence.md). State what you actually viewed and which interactions remain untested. See [host setup](references/host_setup.md) to install optional native roles. No review database or CLI lifecycle is required; leaf reports remain ordinary prose, while the parent supplies the [structural acceptance-check input](references/review_standard.md#structural-acceptance-check) for formal clean acceptance.
