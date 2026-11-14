@@ -12,9 +12,11 @@ Inspect actual sources and relevant callers, tests or supplied observations. Cit
 
 State the trigger, expected behavior, observed behavior and supported consequence. Separate established defects from risks, improvements and questions. Account for defenses and legitimate behavior. Unseen adapters, unavailable tests and unverified runtime behavior remain explicit dependencies, not invented guarantees. A successful command does not prove the desired behavior; supplied results retain their provenance and limits.
 
+Check proposed triggers and verification expectations against the actual requirement, including at-most, at-least and exact relations and legitimate boundary cases. Do not make a check reject behavior the requirement permits.
+
 ## Findings
 
-For each actionable finding, include a concise title, priority with context, location, causal explanation, consequence, focused correction and useful verification. Mention tradeoffs when material. Use the project's priorities; otherwise P0 means immediate severe harm, P1 a required/common workflow failure, P2 a meaningful limited defect or risk, and P3 low-risk actionable work. Do not inflate style preferences or force a finding quota.
+For each actionable finding, include a concise title, priority with context, location, causal explanation, consequence, focused correction and useful verification. Mention tradeoffs when material. Use the project's priorities; otherwise P0 means immediate severe harm, P1 a required/common workflow failure, P2 a meaningful limited defect or risk, and P3 low-risk actionable work. Do not inflate style preferences or force a finding quota. Base severity on supported consequences and exposure, not a threat category, control count or workflow phase alone. P0 requires evidence of immediate severe harm in the actual scope; distinguish a synthetic example from an observed live incident.
 
 Give findings stable identifiers and retain them through handoff, developer response and re-review; link newly discovered findings separately. Use ordinary prose or the project format, without a mandatory schema. Account for each assigned requirement using the [scope and criteria guidance](intent_context.md#compare-and-report), and state what remains unassessed.
 
