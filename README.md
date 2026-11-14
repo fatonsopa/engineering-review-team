@@ -64,6 +64,18 @@ Findings explain the location, triggering behavior, supported consequence and fo
 
 See [AGENTS.md](AGENTS.md). Run `python3 -B -m unittest discover -s tests -p test_package.py -v` for installer and asset checks. Inspect affected links and instruction meaning. These checks do not prove domain expertise or native-host execution; use a bounded host smoke only when the changed behavior warrants one.
 
+### Behavioral regression trials
+
+[The retained cases](tests/review_cases.json) cover ten reviewers with two scenarios each. Run the three preparation checks with `python3 -B -m unittest discover -s tests -p test_review_cases.py -v`, then prepare a disposable workspace from the repository root:
+
+```sh
+python3 -B tests/test_review_cases.py --prepare code --destination /absolute/disposable/code --host claude-code
+cd /absolute/disposable/code
+claude -p --agent engineering-review-implementation --permission-mode dontAsk --tools Read,Glob,Grep --allowedTools Read,Glob,Grep < prompt.txt
+```
+
+The expected checklist is for the maintainer and is not staged. Assess the actual output against it and verify source preservation; preparation and unit checks are not behavioral passes. For Codex, use `--host codex` with the same [preparation module](tests/test_review_cases.py), then dispatch the prepared native reviewer from the main context.
+
 ## License
 
 MIT; see [LICENSE](LICENSE).

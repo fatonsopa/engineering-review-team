@@ -1,0 +1,277 @@
+[
+  {
+    "id": "code",
+    "agent": "engineering-review-implementation",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "CODE-PILOT-01",
+        "requirements": "Python 3.12. The caller supplies built-in integer values (type(x) is int); other input types are outside this contract. The supplied function is the complete relevant code scope, with no I/O, shared state or external effects. C1: Clamp integers to the inclusive interval 0 through 10.",
+        "files": {
+          "module.py": "def clamp(x):\n    return min(10, max(1, x))\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "CODE-PILOT-02",
+        "requirements": "Python 3.12. The caller supplies built-in integer values (type(x) is int); other input types are outside this contract. The supplied function is the complete relevant code scope, with no I/O, shared state or external effects. C1: Clamp integers to the inclusive interval 0 through 10.",
+        "files": {
+          "module.py": "def clamp(x):\n    return min(10, max(0, x))\n"
+        }
+      }
+    ],
+    "expected": [
+      "Locate the lower-bound defect in case-a for zero/negative integers.",
+      "Recognize case-b satisfies inclusive 0..10 clamping for the declared integer scope."
+    ]
+  },
+  {
+    "id": "architecture",
+    "agent": "engineering-review-architecture",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "ARCH-PILOT-01",
+        "requirements": "Web and batch consumers must use the same 10 percent surcharge rule. Assess rule ownership and cross-component contract consistency; avoid unrelated redesign. C1: For the same items, both consumers apply the agreed common 10 percent surcharge. Python 3.12 source semantics; the inputs are finite lists of nonnegative built-in integers with total at most 1000. These are synthetic dimensionless scores, with ordinary Python floating-point results; no currency or rounding requirement applies. Both entry points are complete and have no hidden adapters, persistence or I/O. Assess the ownership and propagation of the common business rule across web and batch entry points, including a focused correction and its change cost if needed. No particular helper, service boundary or file layout is mandated. Runtime deployment and future workloads are unspecified.",
+        "files": {
+          "module.py": "def web_total(items):\n    return sum(items) * 1.1\ndef job_total(items):\n    return sum(items) * 1.2\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "ARCH-PILOT-02",
+        "requirements": "Web and batch consumers must use the same 10 percent surcharge rule. Assess rule ownership and cross-component contract consistency; avoid unrelated redesign. C1: For the same items, both consumers apply the agreed common 10 percent surcharge. Python 3.12 source semantics; the inputs are finite lists of nonnegative built-in integers with total at most 1000. These are synthetic dimensionless scores, with ordinary Python floating-point results; no currency or rounding requirement applies. Both entry points are complete and have no hidden adapters, persistence or I/O. Assess the ownership and propagation of the common business rule across web and batch entry points, including a focused correction and its change cost if needed. No particular helper, service boundary or file layout is mandated. Runtime deployment and future workloads are unspecified.",
+        "files": {
+          "module.py": "def total(items):\n    return sum(items) * 1.1\ndef web_total(items): return total(items)\ndef job_total(items): return total(items)\n"
+        }
+      }
+    ],
+    "expected": [
+      "Locate inconsistent surcharge ownership/behavior between web and job in case-a.",
+      "Recognize case-b shares the agreed 10% rule; do not demand a service or folder redesign."
+    ]
+  },
+  {
+    "id": "security",
+    "agent": "engineering-review-security",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "SEC-PILOT-01",
+        "requirements": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary. C1 is the stated tenant-isolation requirement. Scope: Python 3.14 source semantics, sequential calls to this complete helper, starting with its empty cache. The authenticated tenant argument comes from a trusted caller and cannot be selected by the attacking tenant; item IDs are caller-selected strings. Two tenants may use the same item ID. The supplied store is a fixed Python mapping of at most four (tenant, item) keys to distinct immutable synthetic strings; it has no hidden adapters or side effects. Allowed item IDs are drawn from this finite store; missing keys may raise KeyError. Store contents and permissions do not change during this scope. Assess isolation across cold reads and cache hits, including repeated legitimate reads. Authentication internals, concurrency, revocation, process lifecycle and real deployment are outside this assignment. No standalone project security document is required or supplied; do not infer browser/session requirements for this helper.",
+        "files": {
+          "module.py": "cache = {}\ndef read(tenant, item, store):\n    if item not in cache:\n        cache[item] = store[(tenant, item)]\n    return cache[item]\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "SEC-PILOT-02",
+        "requirements": "A caller supplies an authenticated tenant and item ID. Each tenant may read only its own stored item. Cache hits must preserve that boundary. C1 is the stated tenant-isolation requirement. Scope: Python 3.14 source semantics, sequential calls to this complete helper, starting with its empty cache. The authenticated tenant argument comes from a trusted caller and cannot be selected by the attacking tenant; item IDs are caller-selected strings. Two tenants may use the same item ID. The supplied store is a fixed Python mapping of at most four (tenant, item) keys to distinct immutable synthetic strings; it has no hidden adapters or side effects. Allowed item IDs are drawn from this finite store; missing keys may raise KeyError. Store contents and permissions do not change during this scope. Assess isolation across cold reads and cache hits, including repeated legitimate reads. Authentication internals, concurrency, revocation, process lifecycle and real deployment are outside this assignment. No standalone project security document is required or supplied; do not infer browser/session requirements for this helper.",
+        "files": {
+          "module.py": "cache = {}\ndef read(tenant, item, store):\n    key = (tenant, item)\n    if key not in cache:\n        cache[key] = store[key]\n    return cache[key]\n"
+        }
+      }
+    ],
+    "expected": [
+      "Trace cross-tenant cache reuse through an item-only key in case-a.",
+      "Recognize tenant-and-item keys in case-b preserve the stated fixed-store sequential contract."
+    ]
+  },
+  {
+    "id": "database",
+    "agent": "engineering-review-data",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "DB-PILOT-01",
+        "requirements": "The database already contains orders. Every existing order must acquire pending status. Review migration compatibility without executing SQL. This fixture uses PostgreSQL 16; orders contains existing rows and there are no preexisting status values or incompatible callers. C1 is this existing-order migration requirement. The supplied statement is the complete proposed migration for a small table of two existing orders. Both rows have distinct integer primary keys and a stored description; preserve those fields and both rows. The status column does not exist yet. This is a one-time migration in an authorized maintenance window with application writers stopped; no concurrent DDL, dependent objects, replication topology or zero-downtime requirement is in scope. The migration role has the required table privileges. No standalone database design document, timing measurement or recovery objective is supplied. Do not infer a measured outage or require an expand/contract rollout for this bounded transition.",
+        "files": {
+          "module.sql": "ALTER TABLE orders ADD COLUMN status TEXT NOT NULL;\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "DB-PILOT-02",
+        "requirements": "The database already contains orders. Every existing order must acquire pending status. Review migration compatibility without executing SQL. This fixture uses PostgreSQL 16; orders contains existing rows and there are no preexisting status values or incompatible callers. C1 is this existing-order migration requirement. The supplied statement is the complete proposed migration for a small table of two existing orders. Both rows have distinct integer primary keys and a stored description; preserve those fields and both rows. The status column does not exist yet. This is a one-time migration in an authorized maintenance window with application writers stopped; no concurrent DDL, dependent objects, replication topology or zero-downtime requirement is in scope. The migration role has the required table privileges. No standalone database design document, timing measurement or recovery objective is supplied. Do not infer a measured outage or require an expand/contract rollout for this bounded transition.",
+        "files": {
+          "module.sql": "ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT 'pending';\n"
+        }
+      }
+    ],
+    "expected": [
+      "Explain NOT NULL without a default fails for existing orders in case-a.",
+      "Recognize the pending default meets case-b under the supplied stopped-writer maintenance window; do not impose zero downtime."
+    ]
+  },
+  {
+    "id": "testing",
+    "agent": "engineering-review-testing",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "TEST-PILOT-01",
+        "requirements": "total must return the arithmetic sum. Assess whether the shown test distinguishes an incorrect constant-zero implementation. C1 is the test-oracle requirement for this one shown test. This is a Python 3.14 source excerpt. The harness binds total in module.py globals before calling test_total; total is a deterministic pure function of the supplied list and the intended implementation returns its arithmetic sum. The harness uses ordinary Python assertions with optimization disabled. The supplied excerpt intentionally omits this injection; do not report a missing import as a defect. Assess detection of the specified constant-zero implementation, not comprehensive arithmetic coverage. No actual test result or production implementation is supplied. Do not execute the excerpt.",
+        "files": {
+          "module.py": "def test_total():\n    assert total([1, 2]) == total([1, 2])\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "TEST-PILOT-02",
+        "requirements": "total must return the arithmetic sum. Assess whether the shown test distinguishes an incorrect constant-zero implementation. C1 is the test-oracle requirement for this one shown test. This is a Python 3.14 source excerpt. The harness binds total in module.py globals before calling test_total; total is a deterministic pure function of the supplied list and the intended implementation returns its arithmetic sum. The harness uses ordinary Python assertions with optimization disabled. The supplied excerpt intentionally omits this injection; do not report a missing import as a defect. Assess detection of the specified constant-zero implementation, not comprehensive arithmetic coverage. No actual test result or production implementation is supplied. Do not execute the excerpt.",
+        "files": {
+          "module.py": "def test_total():\n    assert total([1, 2]) == 3\n"
+        }
+      }
+    ],
+    "expected": [
+      "Explain the self-comparison assertion in case-a accepts constant-zero behavior.",
+      "Recognize the explicit expected sum in case-b detects that specified mutant; do not invent a missing-import defect."
+    ]
+  },
+  {
+    "id": "devops",
+    "agent": "engineering-review-operations",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "DEVOPS-PILOT-01",
+        "requirements": "A logical request may make at most three downstream attempts. Assess failure behavior; do not perform live load tests. C1 is the total-attempt limit for this logical request. Operating context: this CPython 3.14 function wraps one read-only configuration fetch for an operator-run local utility. The supplied call is the complete downstream boundary: each invocation performs exactly one idempotent attempt, returns its value or raises built-in TimeoutError within 100 milliseconds, and contains no retry layer. The caller invokes fetch once and reports any raised exception to the operator. Only one logical request is active; no queue or background retry exists. There is no required backoff or jitter for this isolated bounded operation. C2: return the exact successful value without extra calls, propagate the third TimeoutError on exhaustion, and propagate a non-TimeoutError immediately. Source-only assessment is requested; no measured latency or observed attempt count is supplied. Delivery configuration is outside this change; explain the relevant operating consequence without claiming another specialist completed review.",
+        "files": {
+          "module.py": "def fetch(call):\n    while True:\n        try: return call()\n        except TimeoutError: pass\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "DEVOPS-PILOT-02",
+        "requirements": "A logical request may make at most three downstream attempts. Assess failure behavior; do not perform live load tests. C1 is the total-attempt limit for this logical request. Operating context: this CPython 3.14 function wraps one read-only configuration fetch for an operator-run local utility. The supplied call is the complete downstream boundary: each invocation performs exactly one idempotent attempt, returns its value or raises built-in TimeoutError within 100 milliseconds, and contains no retry layer. The caller invokes fetch once and reports any raised exception to the operator. Only one logical request is active; no queue or background retry exists. There is no required backoff or jitter for this isolated bounded operation. C2: return the exact successful value without extra calls, propagate the third TimeoutError on exhaustion, and propagate a non-TimeoutError immediately. Source-only assessment is requested; no measured latency or observed attempt count is supplied. Delivery configuration is outside this change; explain the relevant operating consequence without claiming another specialist completed review.",
+        "files": {
+          "module.py": "def fetch(call):\n    for attempt in range(3):\n        try: return call()\n        except TimeoutError:\n            if attempt == 2: raise\n"
+        }
+      }
+    ],
+    "expected": [
+      "Explain case-a has unbounded timeout retries and can fail to return.",
+      "Recognize case-b permits at most three attempts, returns success and propagates the specified exceptions."
+    ]
+  },
+  {
+    "id": "performance",
+    "agent": "engineering-review-performance",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "PERF-PILOT-01",
+        "requirements": "For an authorized tenant and an ordered list of 0..100 distinct existing item IDs, return exactly that tenant's item values in input order. A logical call may make at most one remote lookup, including an empty list. The supplied client has no implicit retries. Compare the request count from code; no latency or throughput measurement is supplied. Runtime: CPython 3.14. The ordered item_ids input is a list and is not mutated during the operation. Each item value may be an arbitrary object, and returned elements must be the exact client-returned values. The API accepts up to 100 keys in one fetch_many call; it returns every requested existing key in a mapping whose iteration order need not match the input. Each method invocation counts as one lookup, including an empty bulk call. Authentication and authorization for the tenant and keys are established by the caller. C1 is the at-most-one-lookup obligation. C2 requires exact values for that tenant in input order, an empty list for no IDs, and unchanged input IDs. C3: a client-raised exception must propagate without retry or a partial successful result. No implicit retries, pagination, cache, concurrent mutation or hidden downstream operations exist. These are supplied boundary contracts, not observations of a deployed client. Reviewers must not execute targets. Deterministic operation counts can verify this boundary later; they cannot establish latency, throughput, CPU usage or capacity.",
+        "files": {
+          "module.py": "def values(client, tenant, item_ids):\n    return [client.fetch_one(tenant, item_id) for item_id in item_ids]\n",
+          "client.py": "class Client:\n    \"\"\"Read-only remote API; each call below counts as one remote lookup.\n    Keys are authorized for the supplied tenant by the caller.\n    Results include every requested existing key; bulk results are a dict.\n    No retries, partial results or hidden pagination.\n    \"\"\"\n    def fetch_one(self, tenant, item_id):\n        raise NotImplementedError\n    def fetch_many(self, tenant, item_ids):\n        raise NotImplementedError\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "PERF-PILOT-02",
+        "requirements": "For an authorized tenant and an ordered list of 0..100 distinct existing item IDs, return exactly that tenant's item values in input order. A logical call may make at most one remote lookup, including an empty list. The supplied client has no implicit retries. Compare the request count from code; no latency or throughput measurement is supplied. Runtime: CPython 3.14. The ordered item_ids input is a list and is not mutated during the operation. Each item value may be an arbitrary object, and returned elements must be the exact client-returned values. The API accepts up to 100 keys in one fetch_many call; it returns every requested existing key in a mapping whose iteration order need not match the input. Each method invocation counts as one lookup, including an empty bulk call. Authentication and authorization for the tenant and keys are established by the caller. C1 is the at-most-one-lookup obligation. C2 requires exact values for that tenant in input order, an empty list for no IDs, and unchanged input IDs. C3: a client-raised exception must propagate without retry or a partial successful result. No implicit retries, pagination, cache, concurrent mutation or hidden downstream operations exist. These are supplied boundary contracts, not observations of a deployed client. Reviewers must not execute targets. Deterministic operation counts can verify this boundary later; they cannot establish latency, throughput, CPU usage or capacity.",
+        "files": {
+          "module.py": "def values(client, tenant, item_ids):\n    if not item_ids:\n        return []\n    rows = client.fetch_many(tenant, item_ids)\n    return [rows[item_id] for item_id in item_ids]\n",
+          "client.py": "class Client:\n    \"\"\"Read-only remote API; each call below counts as one remote lookup.\n    Keys are authorized for the supplied tenant by the caller.\n    Results include every requested existing key; bulk results are a dict.\n    No retries, partial results or hidden pagination.\n    \"\"\"\n    def fetch_one(self, tenant, item_id):\n        raise NotImplementedError\n    def fetch_many(self, tenant, item_ids):\n        raise NotImplementedError\n"
+        }
+      }
+    ],
+    "expected": [
+      "Explain case-a exceeds one remote lookup for multiple items without claiming a latency measurement.",
+      "Recognize case-b bulk lookup preserves ordering/identity and uses no lookup for empty input under the client contract."
+    ]
+  },
+  {
+    "id": "design",
+    "agent": "engineering-review-design",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "DESIGN-PILOT-01",
+        "requirements": "C1: The Show instructions control must be reachable with Tab, visibly focused, and activate using both Enter and Space without a pointer. C2: At a 320 CSS-pixel-wide viewport, after activation the complete instruction text \"Keep these recovery instructions offline. If you lose access, open the recovery page, enter your saved recovery code and follow the instructions before requesting another code.\" must remain readable without clipping, hiding or horizontal page scrolling. C3: Pointer activation must reveal the instructions section, retain its exact complete text in the DOM, and set the status to \"Instructions shown.\"; repeated activation must preserve that state. C2 separately owns rendered readability and clipping. Preserve the action name and programmatic status semantics. No specific implementation technique is required. Review browser commitments only as supplied; the captured Chromium observation does not establish all-browser, physical-device or assistive-technology support. The target is only this scenario's index.html, an authored disposable static HTML fixture with local JavaScript where supplied; it performs no network requests, account changes or persistent writes. Review date is the synthetic as-of date 2026-11-05. Source inspection is not actual interaction, rendered-browser or assistive-technology execution. Only the declared task and criteria are assigned; report separately any essential evidence gap. No finding quota applies.",
+        "files": {
+          "index.html": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Recovery instructions</title>\n  <style>\n    html { font-size: 16px; }\n    body { margin: 16px; font-family: Arial, sans-serif; line-height: 1.5; color: #111; background: #fff; }\n    main { max-width: 480px; }\n    h1 { font-size: 1.5rem; margin: 0 0 16px; }\n    .action { display: inline-block; padding: 12px; font: inherit; cursor: pointer; background: #fff; color: #111; border: 1px solid #111; }\n    .action:focus { outline: none; }\n    .instructions { margin-top: 16px; padding: 8px; border: 1px solid #555; height: 28px; overflow: hidden; white-space: nowrap; }\n    #status { margin: 16px 0; }\n  </style>\n</head>\n<body>\n  <main>\n    <h1>Recovery instructions</h1>\n    <p>Show the instructions to keep with your offline recovery code.</p>\n    <div id=\"show\" class=\"action\" role=\"button\" tabindex=\"0\" onclick=\"showInstructions()\">Show instructions</div>\n    <p id=\"status\" role=\"status\">Instructions not shown.</p>\n    <section id=\"instructions\" class=\"instructions\" aria-label=\"Recovery instructions\" hidden>Keep these recovery instructions offline. If you lose access, open the recovery page, enter your saved recovery code and follow the instructions before requesting another code.</section>\n  </main>\n  <script>\n    function showInstructions() {\n      document.getElementById('instructions').hidden = false;\n      document.getElementById('status').textContent = 'Instructions shown.';\n    }\n  </script>\n</body>\n</html>\n",
+          "image_context.txt": "Actual authoring capture by design_focused_cases using Playwright 1.64.1\nBrowser: local headless Chromium 148.0.7778.96\nPlatform: macOS-26.5.2-arm64-arm-64bit-Mach-O\nInput: index.html, SHA-256 04b6ab055a39d74037aa1f9c45d4417135c4c215820a03eed67e167a9cbd6612\nRoute: local file index.html; not a deployed product URL.\nViewport: 320 by 600 CSS pixels; device scale factor 1; browser zoom 100%.\nMethod: open exact saved HTML, pointer-click #show once, capture full viewport with page.screenshot. No crop, resize or other image edit.\nState: after the pointer click; local fixture data is exactly the saved source text.\nImage: observation.png, png, SHA-256 94216afea1a22926131437167b6f8df5b205f094bbfdc32a5c534677bf8488c2\nCaptured at UTC: 2026-11-05T07:38:39.958467+00:00\nThis is an actual browser render of an authored disposable fixture. It is not production evidence, physical-device testing, keyboard testing or a screen-reader observation.\n"
+        },
+        "binary_files": {
+          "observation.png": "fixtures/design/case-a.png"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "DESIGN-PILOT-02",
+        "requirements": "C1: The Show instructions control must be reachable with Tab, visibly focused, and activate using both Enter and Space without a pointer. C2: At a 320 CSS-pixel-wide viewport, after activation the complete instruction text \"Keep these recovery instructions offline. If you lose access, open the recovery page, enter your saved recovery code and follow the instructions before requesting another code.\" must remain readable without clipping, hiding or horizontal page scrolling. C3: Pointer activation must reveal the instructions section, retain its exact complete text in the DOM, and set the status to \"Instructions shown.\"; repeated activation must preserve that state. C2 separately owns rendered readability and clipping. Preserve the action name and programmatic status semantics. No specific implementation technique is required. Review browser commitments only as supplied; the captured Chromium observation does not establish all-browser, physical-device or assistive-technology support. The target is only this scenario's index.html, an authored disposable static HTML fixture with local JavaScript where supplied; it performs no network requests, account changes or persistent writes. Review date is the synthetic as-of date 2026-11-05. Source inspection is not actual interaction, rendered-browser or assistive-technology execution. Only the declared task and criteria are assigned; report separately any essential evidence gap. No finding quota applies.",
+        "files": {
+          "index.html": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Recovery instructions</title>\n  <style>\n    html { font-size: 16px; }\n    body { margin: 16px; font-family: Arial, sans-serif; line-height: 1.5; color: #111; background: #fff; }\n    main { max-width: 480px; }\n    h1 { font-size: 1.5rem; margin: 0 0 16px; }\n    .action { display: inline-block; padding: 12px; font: inherit; cursor: pointer; background: #fff; color: #111; border: 1px solid #111; }\n    .action:focus-visible { outline: 3px solid #005fcc; outline-offset: 3px; }\n    .instructions { margin-top: 16px; padding: 8px; border: 1px solid #555; white-space: normal; overflow-wrap: break-word; }\n    #status { margin: 16px 0; }\n  </style>\n</head>\n<body>\n  <main>\n    <h1>Recovery instructions</h1>\n    <p>Show the instructions to keep with your offline recovery code.</p>\n    <button type=\"button\" id=\"show\" class=\"action\" onclick=\"showInstructions()\">Show instructions</button>\n    <p id=\"status\" role=\"status\">Instructions not shown.</p>\n    <section id=\"instructions\" class=\"instructions\" aria-label=\"Recovery instructions\" hidden>Keep these recovery instructions offline. If you lose access, open the recovery page, enter your saved recovery code and follow the instructions before requesting another code.</section>\n  </main>\n  <script>\n    function showInstructions() {\n      document.getElementById('instructions').hidden = false;\n      document.getElementById('status').textContent = 'Instructions shown.';\n    }\n  </script>\n</body>\n</html>\n",
+          "image_context.txt": "Actual authoring capture by design_focused_cases using Playwright 1.64.1\nBrowser: local headless Chromium 148.0.7778.96\nPlatform: macOS-26.5.2-arm64-arm-64bit-Mach-O\nInput: index.html, SHA-256 78ce0b214c9487142be13191eec827a004aa754bc3498a82e1a7795b01e0ba91\nRoute: local file index.html; not a deployed product URL.\nViewport: 320 by 600 CSS pixels; device scale factor 1; browser zoom 100%.\nMethod: open exact saved HTML, pointer-click #show once, capture full viewport with page.screenshot. No crop, resize or other image edit.\nState: after the pointer click; local fixture data is exactly the saved source text.\nImage: observation.jpg, jpeg, SHA-256 171a3dfe120d7680b2a714bfea56a3247a83073d8f8b13c9ade028d224645781\nCaptured at UTC: 2026-11-05T07:38:40.841473+00:00\nThis is an actual browser render of an authored disposable fixture. It is not production evidence, physical-device testing, keyboard testing or a screen-reader observation.\n"
+        },
+        "binary_files": {
+          "observation.jpg": "fixtures/design/case-b.jpg"
+        }
+      }
+    ],
+    "expected": [
+      "Identify keyboard/focus and clipped instructions in case-a; actually view its supplied image.",
+      "Recognize case-b meets the supplied source and image commitments; distinguish source/native semantics and image observation from unperformed interaction/assistive-technology tests."
+    ]
+  },
+  {
+    "id": "localization",
+    "agent": "engineering-review-localization",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "LOC-PILOT-01",
+        "requirements": "C1: receipt formats the amount in the supplied locale while retaining the supplied transaction currency; localization never converts its value or currency. Supported locales are en-US and de-DE; currencies are USD, EUR and JPY, using native Intl currency fraction rules. Amount is a finite Number with absolute value below 1000000. C2: civilDate is a valid Gregorian YYYY-MM-DD date in 2025..2027 and must display the same calendar date in either locale regardless of caller timeZone; supported caller zones are UTC and America/Los_Angeles. Use numeric year and two-digit month/day. This value is a civil date, not an instant. C3: Return exactly amountText, dateText and name as strings, preserve name code points and the input object, and use no normalization or lossy conversion. name is arbitrary well-formed Unicode.  Runtime contract: Node.js v23.11.0, ICU 77.1, CLDR 47.0, Unicode 16.0, time-zone data 2025a; native Intl supports en-US, de-DE and pl-PL. Modules are CommonJS and use no network, accounts or persistent writes. All inputs satisfy the stated domain; validation of out-of-domain input is out of scope. Synthetic review date: 2026-11-13. No runtime, rendered or qualified linguistic observations are supplied; source analysis is the assigned evidence method. The approved fixture wording is an explicit test contract, not proof of a real linguistic audit. No missing language or market commitment may be invented.",
+        "files": {
+          "module.cjs": "'use strict';\nfunction receipt({ amount, currency, civilDate, locale, timeZone, name }) {\n  const displayCurrency = locale === 'de-DE' ? 'EUR' : currency;\n  const amountText = new Intl.NumberFormat(locale, { style: 'currency', currency: displayCurrency }).format(amount);\n  const dateText = new Intl.DateTimeFormat(locale, { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(civilDate));\n  return { amountText, dateText, name };\n}\nmodule.exports = { receipt };\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "LOC-PILOT-02",
+        "requirements": "C1: receipt formats the amount in the supplied locale while retaining the supplied transaction currency; localization never converts its value or currency. Supported locales are en-US and de-DE; currencies are USD, EUR and JPY, using native Intl currency fraction rules. Amount is a finite Number with absolute value below 1000000. C2: civilDate is a valid Gregorian YYYY-MM-DD date in 2025..2027 and must display the same calendar date in either locale regardless of caller timeZone; supported caller zones are UTC and America/Los_Angeles. Use numeric year and two-digit month/day. This value is a civil date, not an instant. C3: Return exactly amountText, dateText and name as strings, preserve name code points and the input object, and use no normalization or lossy conversion. name is arbitrary well-formed Unicode. C4: message supports exact en-US/de-DE catalogs: use the selected locale own key including a meaningful empty string; missing locale/key falls back to the en-US own key, otherwise null. No regional negotiation is promised. C5: itemCount formats nonnegative integer counts 0..1000000 using pl-PL NumberFormat and chooses the approved label by pl-PL cardinal PluralRules; catalog values are authoritative for this fixture. The complete message consists of formatted count, one ASCII space and the selected label. Fractional counts and ordinals are outside scope.  Runtime contract: Node.js v23.11.0, ICU 77.1, CLDR 47.0, Unicode 16.0, time-zone data 2025a; native Intl supports en-US, de-DE and pl-PL. Modules are CommonJS and use no network, accounts or persistent writes. All inputs satisfy the stated domain; validation of out-of-domain input is out of scope. Synthetic review date: 2026-11-13. No runtime, rendered or qualified linguistic observations are supplied; source analysis is the assigned evidence method. The approved fixture wording is an explicit test contract, not proof of a real linguistic audit. No missing language or market commitment may be invented.",
+        "files": {
+          "module.cjs": "'use strict';\nconst { messages, pluralLabels } = require('./catalogs.cjs');\nfunction receipt({ amount, currency, civilDate, locale, timeZone, name }) {\n  const amountText = new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount);\n  const dateText = new Intl.DateTimeFormat(locale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(civilDate + 'T00:00:00Z'));\n  return { amountText, dateText, name };\n}\nfunction message(locale, key) {\n  const selected = Object.hasOwn(messages, locale) ? messages[locale] : null;\n  if (selected && Object.hasOwn(selected, key)) return selected[key];\n  return Object.hasOwn(messages['en-US'], key) ? messages['en-US'][key] : null;\n}\nfunction itemCount(count) {\n  const category = new Intl.PluralRules('pl-PL').select(count);\n  return `${new Intl.NumberFormat('pl-PL').format(count)} ${pluralLabels[category]}`;\n}\nmodule.exports = { receipt, message, itemCount };\n",
+          "catalogs.cjs": "'use strict';\n// Approved fixture wording for structural checks; not evidence of a linguistic audit.\nconst messages = {\n  'en-US': { title: 'Receipt', optionalNote: 'Keep your receipt.', help: 'Contact support.' },\n  'de-DE': { title: 'Beleg', optionalNote: '' }\n};\nconst pluralLabels = { one: 'produkt', few: 'produkty', many: 'produktów', other: 'produktu' };\nmodule.exports = { messages, pluralLabels };\n"
+        }
+      }
+    ],
+    "expected": [
+      "Identify currency substitution and civil-date shift independently in case-a while retaining correct name/input behavior.",
+      "Recognize case-b currency/date, empty-string and safe-key fallback and Polish plural logic within the declared contracts; do not claim linguistic approval."
+    ]
+  },
+  {
+    "id": "compliance",
+    "agent": "engineering-review-compliance",
+    "scenarios": [
+      {
+        "id": "case-a",
+        "origin": "CMP-PILOT-01",
+        "requirements": "C1: release_manifest must include the exact vendor/LICENSE text when it includes the supplied Widget component as vendor/widget.py. The task establishes that this manifest is the complete planned distribution of that component and that the exact MIT notice in vendor_LICENSE.txt is required. C2: Input files is an insertion-ordered dict of normalized relative path strings to text strings; it includes app.py, vendor/widget.py and vendor/LICENSE. Preserve every .py path/text pair exactly and exclude every other non-.py path except the exact vendor/LICENSE path. Optional additional .py paths and unrelated build.log/`README.txt` inputs are permitted. C3: Return a new dictionary, preserve input unchanged, and copy notice text without changing its copyright, permission condition or disclaimer. Do not impose corporate headers or other licenses. fixture_contract.md confirms the synthetic origin/use; vendor_snippet.py and vendor_LICENSE.txt are exact supplied material. They are external task evidence, not additional implementations to review. Runtime: CPython 3.14.4, standard library only. The target contains pure functions over strings/dictionaries/lists, with no filesystem, network, live account, scanner or external service operations. Synthetic review date: 2026-11-13. Inputs satisfy the stated type/domain contracts; unassigned validation is not required. Task-confirmed synthetic provenance and internal decision authority are premises for these fixtures, not legal determinations about real entities. No framework is universally assigned. Source inspection is not actual execution, audit delivery, distribution, certification or release approval. No target observations are supplied.",
+        "files": {
+          "module.py": "def release_manifest(files):\n    return {path: text for path, text in files.items() if path.endswith(\".py\")}\n",
+          "fixture_contract.md": "# Fixture provenance and use\n\nThe task confirms this authored synthetic material and its attribution. vendor_snippet.py is the complete Widget component, version fixture-1, attributed to Fixture Component Authors under the exact MIT text in vendor_LICENSE.txt. Where supplied, own_snippet.py is company-owned fixture code attributed to Fixture Project Authors under own_LICENSE.txt. This provenance is an explicit fixture assumption, not an assertion about a real company or third-party work.\n\nThe full MIT template is from https://opensource.org/license/mit; the sample copyright holder/year were filled in as stated above, with ASCII quote typography and line wrapping only. The copyright, permission condition and disclaimer are retained. These files are synthetic evidence for an exact technical notice-preservation contract, not instructions from the reviewed source.\n\nThe target transforms strings and dictionaries only. An output manifest represents a declared prospective distribution; no actual distribution, filesystem operation, network service or external account is performed. The supplied task establishes which component/notice belongs in that manifest. License/provenance files are external task evidence; module.py is the only target implementation.\n",
+          "vendor_snippet.py": "# Copyright (c) 2026 Fixture Component Authors\n\ndef label(value):\n    return f\"Widget: {value}\"\n",
+          "vendor_LICENSE.txt": "MIT License\n\nCopyright (c) 2026 Fixture Component Authors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+        }
+      },
+      {
+        "id": "case-b",
+        "origin": "CMP-PILOT-02",
+        "requirements": "C1: plan_records must inspect only records matching both supplied tenant and subject; preserve matching input order and exclude all other records from every output list. Caller authorization is a supplied boundary contract. C2: For that pair, expires_at <= now selects delete_ids unless hold is true; active holds and expires_at > now select retain_ids. Every matched record belongs to exactly one of those two lists. Holds are already valid/current for their individual records under the supplied contract; do not extend them. C3: export contains every matching record from the input snapshot, including held and expired records, with exactly id and value, preserving their string values and input order. No email, tenant, subject or extra field may be exposed. This is the scoped export contract, not a universal statement about access or portability rights. C4: can_send accepts purpose operational or marketing and boolean marketing_opt_in. Operational messages are independently authorized and allowed for either preference; marketing is allowed only when the preference is true at this decision point. Do not turn this into a universal consent or lawful-basis conclusion. C5: Both functions preserve all input lists, dictionaries and values. plan_records returns exactly delete_ids, retain_ids and export; no deletion or delivery actually occurs. The field types and current snapshot assumptions in fixture_contract.md are confirmed by this task. Runtime: CPython 3.14.4, standard library only. The target contains pure functions over strings/dictionaries/lists, with no filesystem, network, live account, scanner or external service operations. Synthetic review date: 2026-11-13. Inputs satisfy the stated type/domain contracts; unassigned validation is not required. Task-confirmed synthetic provenance and internal decision authority are premises for these fixtures, not legal determinations about real entities. No framework is universally assigned. Source inspection is not actual execution, audit delivery, distribution, certification or release approval. No target observations are supplied.",
+        "files": {
+          "module.py": "def plan_records(records, tenant, subject, now):\n    delete_ids = []\n    retain_ids = []\n    exported = []\n    for row in records:\n        if row[\"tenant\"] != tenant or row[\"subject\"] != subject:\n            continue\n        if row[\"hold\"] or row[\"expires_at\"] > now:\n            retain_ids.append(row[\"id\"])\n        else:\n            delete_ids.append(row[\"id\"])\n        exported.append({\"id\": row[\"id\"], \"value\": row[\"value\"]})\n    return {\"delete_ids\": delete_ids, \"retain_ids\": retain_ids, \"export\": exported}\n\n\ndef can_send(purpose, marketing_opt_in):\n    return purpose == \"operational\" or marketing_opt_in\n",
+          "fixture_contract.md": "# Synthetic data lifecycle contract\n\nThe task confirms the project owner's authority for these internal technical rules and the current eligibility/hold decisions. No statutory framework, jurisdiction or disputed lawful basis is assigned. The caller has already authenticated the authorized requester and chosen the permitted tenant/subject. This function still limits output to that exact pair; it does not itself establish upstream authentication.\n\nA record is a dictionary containing unique string id, string tenant and subject, integer expires_at, boolean hold, string value, and optional extra fields such as email or nested notes. now is an integer in the same supplied time unit. All inputs meet these types. A true hold is an active, scoped instruction to retain that record; its authority has been established upstream. The function is not authorized to extend it to another record or decide that a new hold is legally valid.\n\nFor the authorized pair, expiry at or before now selects deletion unless held; later expiry or hold selects retention. The pure planner returns identifiers and performs no deletion. At the input snapshot, all matching records remain eligible for this scoped export, including held/expired records; the hold restricts disposal, not this export. Export only id and value in input order. These identifiers can remain linkable and are not claimed anonymous. Email, subject, tenant and extra fields must not enter exported records.\n\nThe optional marketing purpose is permitted only with marketing_opt_in true; the operational purpose is independently authorized by this explicit project contract. Withdrawal affects only marketing. can_send receives exactly one of those two purposes and a boolean; it represents the decision at dispatch time, not a queue implementation or proof of lawful processing under any statute.\n"
+        }
+      }
+    ],
+    "expected": [
+      "Identify the omitted required vendor/LICENSE in case-a using the actual supplied MIT text, not a blanket license rule.",
+      "Recognize case-b tenant/subject, expiry/hold, snapshot export and purpose-specific preference behavior; do not claim physical deletion, legal certification or exercised production controls."
+    ]
+  }
+]
