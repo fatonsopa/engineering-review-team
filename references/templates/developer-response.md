@@ -4,7 +4,7 @@ Use this optional outline in the existing review discussion. Omit irrelevant det
 
 Review/source: <review link or finding list, original source and changed revision or working tree>
 
-For each finding:
+For each finding, retain its original identifier:
 
 - Status: fixed, partially fixed, disputed, deferred or blocked.
 - Change or reason: what changed, or why action remains unresolved.

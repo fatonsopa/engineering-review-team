@@ -3,7 +3,8 @@
 Optional outline for the review message:
 
 - Reviewed scope/source and important limits.
-- Retained findings: identifier if useful, location, trigger, expected/observed behavior, consequence and suggested correction.
+- Assigned requirements: disposition and evidence or reason, using existing identifiers or exact section references.
+- Retained findings: stable identifier, location, trigger, expected/observed behavior, consequence and suggested correction.
 - Verification needed for the original failure and relevant valid behavior.
 - Unresolved questions or decisions.
 

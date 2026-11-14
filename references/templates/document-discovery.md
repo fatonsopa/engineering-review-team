@@ -3,7 +3,8 @@
 Optional checklist within the assignment or review notes:
 
 - Which requirements, decisions or project conventions apply?
-- Where were relevant sources found, and what is their authority/version?
+- Which locations and queries were actually searched, what was found, and what access or search limits remain?
+- Are the relevant sources current for this task, and what is their authority/version?
 - Which sections does each selected reviewer need?
 - Are there conflicts, stale sources or essential missing inputs?
 

@@ -10,7 +10,7 @@ Inspection is read-only. Do not fix targets, merge, deploy, publish, change trac
 
 Respect authorized source and evidence roots. Access to an installed skill does not authorize exploring its ancestors or siblings. Resolve the supplied skill root and named resources directly. Request essential missing inputs through the lead.
 
-Use only relevant specialists and available native tools. The lead owns scope, assignments, reconciliation and the final response. A nested read-only lead asks its parent for actions it cannot perform. If specialist dispatch is unavailable, the lead may perform supported work itself and disclose the limitation; do not claim specialist execution.
+Respect actual user and host limits. For large reviews, set proportionate scope, execution and retry bounds in the assignment before starting; report unresolved work when a bound is reached. Use only relevant specialists and available native tools. The lead owns scope, assignments, reconciliation and the final response. A nested read-only lead asks its parent for actions it cannot perform. If specialist dispatch is unavailable, the lead may perform supported work itself and disclose the limitation; do not claim specialist execution.
 
 ## Effective rules
 
@@ -20,4 +20,4 @@ Apply actual project requirements and accepted decisions. Use compatible package
 
 Distinguish observations, supplied claims, assumptions and unknowns. Preserve failures and meaningful prior findings; do not rewrite history to manufacture success. Missing evidence does not establish absence. A correct partial finding remains useful even when other work is blocked. Investigate disagreements and retain supported serious findings regardless of votes.
 
-Independent re-review requires a reviewer distinct from the implementer when independence is requested. Names alone do not establish it. The requesting owner retains integration and release decisions. Follow the [shared standard](review_standard.md) for findings and handoff.
+Formal Engineering Review requires a reviewer distinct from the implementer, including re-review of corrections. A coordinating main context may review directly when it is distinct from the implementer. When independence is unavailable, label the work as self-review and disclose the limit; it is not independent acceptance. Names alone do not establish independence. The requesting owner retains integration and release decisions. Follow the [shared standard](review_standard.md) for findings and handoff.

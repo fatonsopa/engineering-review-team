@@ -16,7 +16,7 @@ State the trigger, expected behavior, observed behavior and supported consequenc
 
 For each actionable finding, include a concise title, priority with context, location, causal explanation, consequence, focused correction and useful verification. Mention tradeoffs when material. Use the project's priorities; otherwise P0 means immediate severe harm, P1 a required/common workflow failure, P2 a meaningful limited defect or risk, and P3 low-risk actionable work. Do not inflate style preferences or force a finding quota.
 
-Use short finding identifiers when a review needs follow-up. They help discussion; they are not a mandatory schema. Discuss applicable requirements without creating a criterion/domain matrix. State which areas were inspected and what remains unassessed.
+Give findings stable identifiers and retain them through handoff, developer response and re-review; link newly discovered findings separately. Use ordinary prose or the project format, without a mandatory schema. Account for each assigned requirement using the [scope and criteria guidance](intent_context.md#compare-and-report), and state what remains unassessed.
 
 ### Consolidating findings
 
@@ -32,4 +32,4 @@ Give the developer the retained findings, reviewed source, suggested corrections
 
 The developer responds per finding with what changed or why it remains disputed, deferred or blocked; relevant files/revision; actual checks and results; and remaining risks or decisions. One shared fix can reference several findings. Partial fixes and omitted responses remain visible. Do not demand commits or pre-fix execution logs that do not exist; use the working tree and explain evidence limits. See the optional [response template](templates/developer-response.md).
 
-Re-review the actual changed source against the original failure and relevant valid paths. Use a distinct reviewer when independence is required. Confirm source freshness, examine new risks and report fixed, partially fixed, unresolved or withdrawn findings with reasons. A developer's claim or passing test alone does not close a finding. Final coverage can remain incomplete while supported findings and corrections are reported.
+Re-review the actual changed source against the original failure and relevant valid paths. Apply the [independence policy](review_policy.md#evidence-and-judgment). Confirm source and governing-requirement freshness, inspect affected changes and new risks, and report fixed, partially fixed, unresolved or withdrawn findings under their original identifiers with reasons. Qualify obsolete evidence rather than using it to close current work. A developer's claim or passing test alone does not close a finding. Final coverage can remain incomplete while supported findings and corrections are reported.
